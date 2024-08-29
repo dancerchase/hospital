@@ -10,22 +10,27 @@ class UserOutputCommands:
         print('Ошибка. В больнице нет пациента с таким ID')
 
     @staticmethod
+    def not_approval_discharge():
+        print('Ошибка. Нельзя понизить самый низкий статус (наши пациенты не умирают)')
+
+    @staticmethod
     def error_command_not_exist():
         print('Команда не распознана. Попробуйте ещё раз')
 
-    def up_status(self, new_status: str):
+    @staticmethod
+    def up_status(new_status: str):
         print(f'Новый статус пациента: "{new_status}"')
 
-    def refusal_of_discharge(self):
+    @staticmethod
+    def refusal_of_discharge():
         print('Пациент остался в статусе "Готов к выписке"')
 
-    def patient_extraction(self):
+    @staticmethod
+    def discharge():
         print('Пациент выписан из больницы')
 
-    def not_approval_discharge(self):
-        print('Ошибка. Нельзя понизить самый низкий статус (наши пациенты не умирают)')
-
-    def print_statistic_patients(self, statistic: dict[str, int]):
+    @staticmethod
+    def statistic_patients(statistic: dict[str, int]):
         print(f'В больнице на данный момент находится {statistic['Всего']} чел., из них:')
         for key, value in statistic.items():
             if key == 'Всего':
