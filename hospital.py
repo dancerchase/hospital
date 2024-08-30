@@ -18,11 +18,8 @@ class Hospital:
         """Выполняет действие в зависимости от команды"""
 
         if command in ['узнать статус пациента', 'get status']:
-            try:
-                patient_id = self._get_user_id_and_checking()
-                self._print_patient_status(patient_id)
-            except TypeError:
-                pass
+            patient_id = self._get_user_id_and_checking()
+            self._print_patient_status(patient_id)
 
 
         elif command in ['повысить статус пациента', 'status up']:
