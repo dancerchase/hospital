@@ -30,6 +30,10 @@ class UserOutputCommands:
         print('Пациент выписан из больницы')
 
     @staticmethod
+    def stop():
+        print('Сеанс завершён.')
+
+    @staticmethod
     def statistic_patients(statistic: dict[str, int]):
         print(f'В больнице на данный момент находится {statistic['Всего']} чел., из них:')
         for key, value in statistic.items():

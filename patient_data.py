@@ -1,3 +1,7 @@
+from errors import UserInputIDIntError, UserInputIDNotExistError
+from user_output_commands import UserOutputCommands
+
+
 class PatientData:
     """Класс для взаимодействия со списком пациентов"""
 
@@ -54,3 +58,21 @@ class PatientData:
                 patient_statistic['Готов к выписке'] += 1
                 patient_statistic['Всего'] += 1
         return patient_statistic
+
+    def patient_id_int_check(self, patient_id: str):
+        """Проверяет правильность ввода ID пациента на целое положительное число"""
+        try:
+            dfg = int(patient_id) < 0
+            fgh = int(patient_id)
+            assert int(patient_id) > 0
+        except (ValueError, AssertionError):
+            raise UserInputIDIntError
+
+    def patient_id_exist_check(self, patient_id: int):
+        """Проверяет правильность ввода ID пациента на существование"""
+        patient_index = self._transformation_id(patient_id)
+        try:
+            assert patient_id < len(self._patients)
+            assert self._patients[patient_index] is not None
+        except AssertionError:
+            raise UserInputIDNotExistError

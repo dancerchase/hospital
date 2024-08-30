@@ -1,6 +1,7 @@
 from patient_data import PatientData
 from user_output_commands import UserOutputCommands
 from user_input_commands import UserInputCommands
+from errors import UserInputCommandError, UserInputIDIntError, UserInputIDNotExistError
 
 
 class Hospital:
@@ -12,17 +13,23 @@ class Hospital:
         self._user_input = UserInputCommands()
         self._user_output = UserOutputCommands()
 
-    def _performing_an_action_based_on_a_command(self, command: str, patient_id: int = None):
+    def _performing_an_action_based_on_a_command(self, command: str):
+        """Выполняет действие в зависимости от команды"""
+
         if command in ['узнать статус пациента', 'get status']:
+            patient_id = self._get_user_id_and_checking()
             self._print_patient_status(patient_id)
 
         elif command in ['повысить статус пациента', 'status up']:
+            patient_id = self._get_user_id_and_checking()
             self._up_status_for_patient(patient_id)
 
         elif command in ['понизить статус пациента', 'status down']:
+            patient_id = self._get_user_id_and_checking()
             self._down_status_for_patient(patient_id)
 
         elif command in ['выписать пациента', 'discharge']:
+            patient_id = self._get_user_id_and_checking()
             self._discharge_patient(patient_id)
 
         elif command in ['рассчитать статистику', 'calculate statistics']:
@@ -80,22 +87,38 @@ class Hospital:
         statistic = self._patient_data.get_statistic_patients()
         self._user_output.statistic_patients(statistic)
 
+    def _get_user_command_and_checking(self):
+        """Возвращает команду пользователя и проверяет ее на правильность, если команда не валидная выводит ошибку и
+        повторно запрашивает команду"""
+        while True:
+            command = self._user_input.get_input_command()
+            try:
+                self._user_input.check_command_in_list_available(command)
+                return command
+            except UserInputCommandError:
+                UserOutputCommands.error_command_not_exist()
+
+    def _get_user_id_and_checking(self):
+        """Возвращает ID пациента и проверяет его на правильность, если ID не валидная выводит ошибку и повторно
+        запрашивает ID"""
+        while True:
+            patient_id = self._user_input.get_patient_id()
+            try:
+                self._patient_data.patient_id_int_check(patient_id)
+
+                patient_id = int(patient_id)
+                self._patient_data.patient_id_exist_check(patient_id)
+
+                return patient_id
+            except UserInputIDIntError:
+                UserOutputCommands.error_patient_id_not_int_or_negative()
+            except UserInputIDNotExistError:
+                UserOutputCommands.error_patient_id_not_exist()
+
     def run_hospital(self):
         while True:
-
-            command = self._user_input.get_input_command()
-            if command is False:
-                continue
-            elif command in ['стоп', 'stop']:
-                print('Сеанс завершён.')
+            command = self._get_user_command_and_checking()
+            if command in ['стоп', 'stop']:
+                self._user_output.stop()
                 break
-            elif command in ['рассчитать статистику', 'calculate statistics']:
-                self._performing_an_action_based_on_a_command(command, patient_id=None)
-                continue
-
-            patient_id = self._user_input.get_patient_id()
-            if patient_id is False:
-                continue
-
-            else:
-                self._performing_an_action_based_on_a_command(command, patient_id)
+            self._performing_an_action_based_on_a_command(command)
