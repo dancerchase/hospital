@@ -1,27 +1,23 @@
-class UserInputCommandError(Exception):
+class InputCommandError(Exception):
+    """Класс для ошибки ввода команды """
     pass
 
 
-class UserInputIDIntError(Exception):
+class IDNotIntOrNegativeError(Exception):
+    """Класс для ошибки ввода ID пациента - если не целое положительное число"""
     pass
 
 
-class UserInputIDNotExistError(Exception):
+class IDNotExistError(Exception):
+    """Класс для ошибки ввода ID пациента - если ID не существует"""
     pass
 
-
-class NumPatientStatusError(Exception):
-    pass
-
-
-class TextPatientStatusError(Exception):
-    pass
-
-class PatientNotExistError(Exception):
-    pass
 
 class MinStatusError(Exception):
+    """Класс для ошибки минимизации ID пациента - если попытка уменьшить ID пациента меньше 0"""
     pass
 
+
 class MaxStatusError(Exception):
+    """Класс для ошибки максимизации ID пациента - если попытка увеличить ID пациента больше 3"""
     pass

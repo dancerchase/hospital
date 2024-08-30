@@ -1,6 +1,3 @@
-from user_output_commands import UserOutputCommands
-from errors import UserInputIDIntError, UserInputCommandError
-
 
 class UserInputCommands:
     """Класс для работы с командами которые вводит пользователь"""
@@ -16,6 +13,5 @@ class UserInputCommands:
         return input('Введите ID пациента: ')
 
     @staticmethod
-    def offer_extract() -> str:
-        answer = input('Желаете этого клиента выписать? (да/нет): ')
-        return answer
+    def hospital_discharge_offer() -> str:
+        return input('Желаете этого клиента выписать? (да/нет): ')
