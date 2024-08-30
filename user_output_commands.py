@@ -15,10 +15,10 @@ class UserOutputCommands:
 
     @staticmethod
     def error_command_not_exist():
-        print('Команда не распознана. Попробуйте ещё раз')
+        print('Неизвестная команда! Попробуйте ещё раз')
 
     @staticmethod
-    def up_status(new_status: str):
+    def new_status(new_status: str):
         print(f'Новый статус пациента: "{new_status}"')
 
     @staticmethod
