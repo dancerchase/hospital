@@ -44,6 +44,9 @@ class Hospital:
         except TextPatientStatusError:
             self._user_output.error_patient_id_not_exist()
 
+        except TypeError:
+            pass
+
     def _up_status_for_patient(self, patient_id: int):
         """Повышение статуса пациента"""
         try:
