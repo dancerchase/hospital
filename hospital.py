@@ -45,6 +45,13 @@ class Hospital:
                 'calculate statistics', 'стоп', 'stop'):
             raise InputCommandError
 
+    def _patient_id_positive_check(self, patient_id: int):
+        """Проверяет правильность ввода ID пациента на целое положительное число"""
+        try:
+            assert patient_id > 0
+        except AssertionError:
+            raise IDNotIntOrNegativeError
+
     def _get_user_command_and_checking(self):
         """Получает команду пользователя и проверяет ее на правильность, если команда не валидная выводит ошибку"""
         command = self._user_input.get_input_command()
@@ -59,7 +66,7 @@ class Hospital:
         patient_id = self._user_input.get_patient_id()
         try:
             patient_id = int(patient_id)
-            self._patient_data.patient_id_positive_check(patient_id)
+            self._patient_id_positive_check(patient_id)
             self._patient_data.patient_id_exist_check(patient_id)
             return patient_id
 

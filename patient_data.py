@@ -8,9 +8,9 @@ class PatientData:
         self._patients = [1 for _ in range(200)]
         self._status = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
-    def _transformation_id(self, input_id: str | int) -> int:
+    def _transformation_id(self, input_id: int) -> int:
         """Преобразование id пациента в индекс в списке пациентов"""
-        return int(input_id) - 1
+        return input_id - 1
 
     def get_patient_status_text(self, patient_id: int) -> str:
         """Возвращает текстовое представление статуса пациента"""
@@ -84,14 +84,6 @@ class PatientData:
     def _get_len_patients_list(self) -> int:
         """Возвращает длинну списка пациентов"""
         return len(self._patients)
-
-    @staticmethod
-    def patient_id_positive_check(patient_id: int):
-        """Проверяет правильность ввода ID пациента на целое положительное число"""
-        try:
-            assert patient_id > 0
-        except AssertionError:
-            raise IDNotIntOrNegativeError
 
     def patient_id_exist_check(self, patient_id: int):
         """Проверяет правильность ввода ID пациента на существование"""
