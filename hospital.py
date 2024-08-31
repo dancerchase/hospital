@@ -6,8 +6,8 @@ from errors import InputCommandError, IDNotIntOrNegativeError, IDNotExistError
 
 
 class Hospital:
-    """Класс использует в себе классы PatientData, UserInputCommands и UserOutputCommands. Содержит в себе логику
-    обработки команд пользователя и отвечает за запуск программы"""
+    """Класс использует в себе классы PatientData, UserInputCommands, UserOutputCommands и ActionsForCommands. Содержит
+    в себе логику обработки команд пользователя и отвечает за запуск программы"""
 
     def __init__(self):
         self._patient_data = PatientData()
