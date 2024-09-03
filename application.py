@@ -12,22 +12,22 @@ class Application:
         self._user_output = UserOutputCommands()
         self._actions = ActionsForCommands()
 
-    def _performing_an_action_based_on_a_command(self, command: str):
+    def _performing_an_action_based_on_a_command(self, command_type: str):
         """Выполняет действие в зависимости от команды"""
 
-        if command in ['узнать статус пациента', 'get status']:
+        if command_type == 'get_status':
             self._actions.print_patient_status()
 
-        elif command in ['повысить статус пациента', 'status up']:
+        elif command_type == 'status_up':
             self._actions.up_status_for_patient()
 
-        elif command in ['понизить статус пациента', 'status down']:
+        elif command_type == 'status_down':
             self._actions.down_status_for_patient()
 
-        elif command in ['выписать пациента', 'discharge']:
+        elif command_type == 'discharge':
             self._actions.discharge_patient()
 
-        elif command in ['рассчитать статистику', 'calculate statistics']:
+        elif command_type == 'calculate_statistics':
             self._actions.print_hospital_statistic()
 
         else:
@@ -36,8 +36,10 @@ class Application:
     def run_application(self):
         """Запуск программы"""
         while True:
-            command = self._user_input.get_input_command_from_user()
-            if command in ['стоп', 'stop']:
+            #TODO можно ли возбудить исключение, когда приходит команда на стоп, а в этом методе отлавливать
+            # исключение и брейкать цикл, или в этом нет смысла?
+            command_type = self._user_input.get_command_type()
+            if command_type == 'stop':
                 self._user_output.stop()
                 break
-            self._performing_an_action_based_on_a_command(command)
+            self._performing_an_action_based_on_a_command(command_type)
