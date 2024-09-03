@@ -52,6 +52,8 @@ class Hospital:
         """Возвращает статистику по пациентам"""
         patient_statistic = {'Всего': 0, 'Болен': 0, 'Слегка болен': 0, 'Тяжело болен': 0, 'Готов к выписке': 0}
         for i in self._patients:
+            if i is None:
+                continue
             patient_statistic['Всего'] += 1
             if i == 0:
                 patient_statistic['Тяжело болен'] += 1

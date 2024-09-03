@@ -8,7 +8,7 @@ class UserInputCommands:
 
     def _get_input_command_from_user(self) -> str:
         """Получает команду от пользователя"""
-        return input('Введите команду: '.lower())
+        return input('Введите команду: ').lower()
 
     def _get_patient_id_from_user(self) -> str:
         """Получает ID пациента от пользователя"""
@@ -16,7 +16,7 @@ class UserInputCommands:
 
     @staticmethod
     def hospital_discharge_offer() -> str:
-        return input('Желаете этого клиента выписать? (да/нет): '.lower())
+        return input('Желаете этого клиента выписать? (да/нет): ').lower()
 
     def get_patient_id(self) -> int:
         """Возвращает ID пациента"""

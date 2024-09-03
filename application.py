@@ -18,10 +18,10 @@ class Application:
         if command_type == 'get_status':
             self._actions.print_patient_status()
 
-        elif command_type == 'status_up':
+        elif command_type == 'up_status':
             self._actions.up_status_for_patient()
 
-        elif command_type == 'status_down':
+        elif command_type == 'down_status':
             self._actions.down_status_for_patient()
 
         elif command_type == 'discharge':
