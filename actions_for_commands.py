@@ -16,6 +16,7 @@ class ActionsForCommands:
         """Печать статуса пациента"""
         try:
             patient_id = self._user_input.get_patient_id()
+            self._hospital.check_patient_id_exist(patient_id)
             patient_status = self._hospital.get_patient_status_text(patient_id)
             self._user_output.print_patient_status(patient_status)
 
@@ -29,6 +30,7 @@ class ActionsForCommands:
         """Повышение статуса пациента"""
         try:
             patient_id = self._user_input.get_patient_id()
+            self._hospital.check_patient_id_exist(patient_id)
             self._hospital.up_status_for_patient(patient_id)
             new_status = self._hospital.get_patient_status_text(patient_id)
             self._user_output.new_status(new_status)
@@ -50,6 +52,7 @@ class ActionsForCommands:
         """Понижение статуса пациента"""
         try:
             patient_id = self._user_input.get_patient_id()
+            self._hospital.check_patient_id_exist(patient_id)
             self._hospital.down_status_for_patient(patient_id)
             new_status = self._hospital.get_patient_status_text(patient_id)
             self._user_output.new_status(new_status)
@@ -67,6 +70,7 @@ class ActionsForCommands:
         """Выписка пациента"""
         try:
             patient_id = self._user_input.get_patient_id()
+            self._hospital.check_patient_id_exist(patient_id)
             self._hospital.patient_discharge(patient_id)
             self._user_output.discharge()
 

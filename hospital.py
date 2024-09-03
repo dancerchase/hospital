@@ -72,6 +72,11 @@ class Hospital:
         """Возвращает длинну списка пациентов"""
         return len(self._patients)
 
-    def is_patient_id_exist(self, patient_id: int) -> bool:
+    def _is_patient_id_exist(self, patient_id: int) -> bool:
         """Проверяет правильность ввода ID пациента на существование"""
         return (patient_id <= self._get_len_patients_list()) and (self._is_patient_valid_in_list(patient_id))
+
+    def check_patient_id_exist(self, patient_id: int):
+        """Получает ID пациента и проверяет есть ли такой пациент в списке пациентов"""
+        if not self._is_patient_id_exist(patient_id):
+            raise IDNotExistError
