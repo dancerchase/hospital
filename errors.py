@@ -1,8 +1,3 @@
-class InputCommandError(Exception):
-    """Класс для ошибки ввода команды """
-    pass
-
-
 class IDNotIntOrNegativeError(Exception):
     """Класс для ошибки ввода ID пациента - если не целое положительное число"""
     pass

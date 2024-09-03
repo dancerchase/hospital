@@ -1,4 +1,4 @@
-from errors import IDNotIntOrNegativeError, IDNotExistError, MinStatusError, MaxStatusError
+from errors import IDNotExistError, MinStatusError, MaxStatusError
 
 
 class Hospital:
@@ -15,21 +15,16 @@ class Hospital:
     def get_patient_status_text(self, patient_id: int) -> str:
         """Возвращает текстовое представление статуса пациента"""
         patient_status_for_number_in_list = self._status[self.get_patient_status_number(patient_id)]
-        try:
-            assert isinstance(patient_status_for_number_in_list, str)
-            return patient_status_for_number_in_list
-        except AssertionError:
-            raise IDNotExistError
+        return patient_status_for_number_in_list
 
     def get_patient_status_number(self, patient_id: int) -> int:
         """Возвращает статус пациента числовым значением из списка пациентов"""
         patient_status_in_list = self._patients[self._get_patient_index(patient_id)]
 
-        try:
-            assert isinstance(patient_status_in_list, int)
-            return patient_status_in_list
-        except AssertionError:
+        if not isinstance(patient_status_in_list, int):
             raise IDNotExistError
+
+        return patient_status_in_list
 
     def _get_patient_index(self, patient_id: int) -> int:
         """Возвращает индекс пациента в списке пациентов"""
@@ -37,29 +32,21 @@ class Hospital:
 
     def up_status_for_patient(self, patient_id: int):
         """Увеличивает статус пациента на единицу"""
-        try:
-            assert self.get_patient_status_number(patient_id) < 3
-            self._patients[self._get_patient_index(patient_id)] += 1
-
-        except AssertionError:
+        if self.get_patient_status_number(patient_id) == 3:
             raise MaxStatusError
+        self._patients[self._get_patient_index(patient_id)] += 1
 
     def down_status_for_patient(self, patient_id: int):
         """Уменьшает статус пациента на единицу"""
-        try:
-            assert self.get_patient_status_number(patient_id) > 0
-            self._patients[self._get_patient_index(patient_id)] -= 1
-
-        except AssertionError:
+        if self.get_patient_status_number(patient_id) == 0:
             raise MinStatusError
+        self._patients[self._get_patient_index(patient_id)] -= 1
 
     def patient_discharge(self, patient_id: int):
         """Выписывает пациента из больницы"""
-        try:
-            assert self._is_patient_valid_in_list(patient_id)
-            self._patients[self._get_patient_index(patient_id)] = None
-        except AssertionError:
+        if not self._is_patient_valid_in_list(patient_id):
             raise IDNotExistError
+        self._patients[self._get_patient_index(patient_id)] = None
 
     def get_statistic_patients(self) -> dict[str, int]:
         """Возвращает статистику по пациентам"""
@@ -85,6 +72,6 @@ class Hospital:
         """Возвращает длинну списка пациентов"""
         return len(self._patients)
 
-    def is_patient_id_exist(self, patient_id: int):
+    def is_patient_id_exist(self, patient_id: int) -> bool:
         """Проверяет правильность ввода ID пациента на существование"""
         return (patient_id <= self._get_len_patients_list()) and (self._is_patient_valid_in_list(patient_id))

@@ -1,4 +1,4 @@
-from errors import IDNotExistError, MaxStatusError, MinStatusError
+from errors import IDNotExistError, MaxStatusError, MinStatusError, IDNotIntOrNegativeError
 from hospital import Hospital
 from user_input_commands import UserInputCommands
 from user_output_commands import UserOutputCommands
@@ -14,14 +14,21 @@ class ActionsForCommands:
 
     def print_patient_status(self):
         """Печать статуса пациента"""
-        patient_id = self._user_input.get_patient_id()
-        patient_status = self._hospital.get_patient_status_text(patient_id)
-        self._user_output.print_patient_status(patient_status)
+        try:
+            patient_id = self._user_input.get_patient_id()
+            patient_status = self._hospital.get_patient_status_text(patient_id)
+            self._user_output.print_patient_status(patient_status)
+
+        except IDNotIntOrNegativeError:
+            UserOutputCommands.error_patient_id_not_int_or_negative()
+
+        except IDNotExistError:
+            UserOutputCommands.error_patient_id_not_exist()
 
     def up_status_for_patient(self):
         """Повышение статуса пациента"""
-        patient_id = self._user_input.get_patient_id()
         try:
+            patient_id = self._user_input.get_patient_id()
             self._hospital.up_status_for_patient(patient_id)
             new_status = self._hospital.get_patient_status_text(patient_id)
             self._user_output.new_status(new_status)
@@ -33,10 +40,16 @@ class ActionsForCommands:
             else:
                 self._user_output.refusal_of_discharge()
 
+        except IDNotIntOrNegativeError:
+            UserOutputCommands.error_patient_id_not_int_or_negative()
+
+        except IDNotExistError:
+            UserOutputCommands.error_patient_id_not_exist()
+
     def down_status_for_patient(self):
         """Понижение статуса пациента"""
-        patient_id = self._user_input.get_patient_id()
         try:
+            patient_id = self._user_input.get_patient_id()
             self._hospital.down_status_for_patient(patient_id)
             new_status = self._hospital.get_patient_status_text(patient_id)
             self._user_output.new_status(new_status)
@@ -44,11 +57,24 @@ class ActionsForCommands:
         except MinStatusError:
             self._user_output.not_approval_discharge()
 
+        except IDNotIntOrNegativeError:
+            UserOutputCommands.error_patient_id_not_int_or_negative()
+
+        except IDNotExistError:
+            UserOutputCommands.error_patient_id_not_exist()
+
     def discharge_patient(self):
         """Выписка пациента"""
-        patient_id = self._user_input.get_patient_id()
-        self._hospital.patient_discharge(patient_id)
-        self._user_output.discharge()
+        try:
+            patient_id = self._user_input.get_patient_id()
+            self._hospital.patient_discharge(patient_id)
+            self._user_output.discharge()
+
+        except IDNotIntOrNegativeError:
+            UserOutputCommands.error_patient_id_not_int_or_negative()
+
+        except IDNotExistError:
+            UserOutputCommands.error_patient_id_not_exist()
 
     def print_hospital_statistic(self):
         """Печать статистики больницы"""
