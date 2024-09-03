@@ -41,3 +41,8 @@ class UserOutputCommands:
                 continue
             elif value != 0:
                 print(f'    - в статусе "{key}": {value} чел.')
+
+    @staticmethod
+    def print_patient_status(patient_status: str):
+        """Печать статуса пациента"""
+        print(f'Статус пациента: "{patient_status}"')

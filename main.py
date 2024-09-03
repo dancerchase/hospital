@@ -1,4 +1,4 @@
-from hospital import Hospital
+from application import Application
 
-hospital = Hospital()
-hospital.run_hospital()
+application = Application()
+application.run_application()
