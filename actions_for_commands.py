@@ -1,65 +1,61 @@
 from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, PatientIDNotIntOrNegativeError
-from hospital import Hospital
-from user_input_commands import UserInputCommands
-from user_output_commands import UserOutputCommands
 
 
 class ActionsForCommands:
-    """Класс содержащий методы для действий в зависимости от команды"""
+    """Содержит методы для работы с командами"""
 
-    def __init__(self):
-        self._hospital = Hospital()
-        self._user_input = UserInputCommands()
-        self._user_output = UserOutputCommands()
+    def __init__(self, input_output_manager, hospital):
+        self._input_output_manager = input_output_manager
+        self._hospital = hospital
 
-    def print_patient_status(self):
+    def send_message_patient_status(self):
         try:
-            patient_id = self._user_input.get_patient_id()
+            patient_id = self._input_output_manager.get_patient_id()
             patient_status = self._hospital.get_patient_status_text(patient_id)
-            self._user_output.print_patient_status(patient_status)
+            self._input_output_manager.send_message_patient_status_text(patient_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
-            self._user_output.print_received_text(error)
+            self._input_output_manager.send_message_with_received_text(error)
 
     def up_patient_status(self):
         try:
-            patient_id = self._user_input.get_patient_id()
+            patient_id = self._input_output_manager.get_patient_id()
 
             if self._hospital.is_possible_to_up_patient_status(patient_id):
                 self._hospital.up_status_for_patient(patient_id)
                 new_status = self._hospital.get_patient_status_text(patient_id)
-                self._user_output.print_new_status(new_status)
+                self._input_output_manager.send_message_new_status(new_status)
 
-            elif self._hospital.is_patient_status_already_max(patient_id):
-                if self._user_input.request_for_discharge():
+            else:
+                if self._input_output_manager.request_for_discharge():
                     self._hospital.patient_discharge(patient_id)
-                    self._user_output.print_patient_discharge()
+                    self._input_output_manager.send_message_patient_discharge()
                 else:
-                    self._user_output.print_out_refusal_of_discharge()
+                    self._input_output_manager.send_message_out_refusal_of_discharge()
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
-            self._user_output.print_received_text(error)
+            self._input_output_manager.send_message_with_received_text(error)
 
     def down_patient_status(self):
         try:
-            patient_id = self._user_input.get_patient_id()
+            patient_id = self._input_output_manager.get_patient_id()
             self._hospital.down_status_for_patient(patient_id)
             new_status = self._hospital.get_patient_status_text(patient_id)
-            self._user_output.print_new_status(new_status)
+            self._input_output_manager.send_message_new_status(new_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError, AttemptLowerMinimumStatusError) as error:
-            self._user_output.print_received_text(error)
+            self._input_output_manager.send_message_with_received_text(error)
 
     def discharge_patient(self):
         try:
-            patient_id = self._user_input.get_patient_id()
+            patient_id = self._input_output_manager.get_patient_id()
             self._hospital.patient_discharge(patient_id)
-            self._user_output.print_patient_discharge()
+            self._input_output_manager.send_message_patient_discharge()
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
-            self._user_output.print_received_text(error)
+            self._input_output_manager.send_message_with_received_text(error)
 
-    def print_hospital_statistic(self):
+    def send_message_hospital_statistics(self):
         statistic = self._hospital.get_statistics_patients_statuses()
         total_patients = self._hospital.get_total_number_patients()
-        self._user_output.print_hospital_statistics(statistic, total_patients)
+        self._input_output_manager.send_message_hospital_statistics_text(statistic, total_patients)

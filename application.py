@@ -1,38 +1,36 @@
 class Application:
-    """Класс использует в себе классы UserInputCommands, UserOutputCommands и ActionsForCommands. Содержит
-    в себе логику обработки команд пользователя и отвечает за запуск программы"""
+    """Обрабатывает команд пользователя и отвечает за запуск программы"""
 
-    def __init__(self, user_input_commands, user_output_commands, actions_for_commands):
-        self._user_input_commands = user_input_commands
-        self._user_output_commands = user_output_commands
+    def __init__(self, input_output_manager, actions_for_commands):
+        self._input_output_manager = input_output_manager
         self._actions_for_commands = actions_for_commands
         self._is_command_not_stop = True
 
-    def _performing_an_action_based_on_a_command(self, command_type: str):
+    def _performing_an_action_based_on_a_command(self, command: str):
 
-        if command_type == 'get_status':
-            self._actions_for_commands.print_patient_status()
+        if command in ['узнать статус пациента', 'get status']:
+            self._actions_for_commands.send_message_patient_status()
 
-        elif command_type == 'up_status':
-            self._actions_for_commands.up_patient_status()
+        elif command in ['повысить статус пациента', 'status up']:
+            self._actions_for_commands.up_status_for_patient()
 
-        elif command_type == 'down_status':
-            self._actions_for_commands.down_patient_status()
+        elif command in ['понизить статус пациента', 'status down']:
+            self._actions_for_commands.down_status_for_patient()
 
-        elif command_type == 'discharge':
+        elif command in ['выписать пациента', 'discharge']:
             self._actions_for_commands.discharge_patient()
 
-        elif command_type == 'calculate_statistics':
-            self._actions_for_commands.print_hospital_statistic()
+        elif command in ['рассчитать статистику', 'calculate statistics']:
+            self._actions_for_commands.send_message_hospital_statistics()
 
-        elif command_type == 'stop':
+        elif command in ['стоп', 'stop']:
             self._is_command_not_stop = False
-            self._user_output_commands.print_application_stop()
+            self._input_output_manager.send_message_stop()
 
         else:
-            self._user_output_commands.print_command_not_exist_error()
+            self._input_output_manager.error_command_not_exist()
 
     def run_application(self):
         while self._is_command_not_stop:
-            command_type = self._user_input_commands.get_command_type()
-            self._performing_an_action_based_on_a_command(command_type)
+            command = self._input_output_manager.get_command_from_user()
+            self._performing_an_action_based_on_a_command(command)

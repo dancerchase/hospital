@@ -9,11 +9,11 @@ class Hospital:
         self._status = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
     def get_patient_status_text(self, patient_id: int) -> str:
+        self._check_patient_exists(patient_id)
         patient_status_text = self._status[self._get_patient_status_number(patient_id)]
         return patient_status_text
 
     def _get_patient_status_number(self, patient_id: int) -> int:
-        self._check_patient_exists(patient_id)
         patient_status_number = self._patients[self._convert_patient_id_to_index(patient_id)]
         return patient_status_number
 
@@ -26,12 +26,11 @@ class Hospital:
         self._patients[self._convert_patient_id_to_index(patient_id)] += 1
 
     def is_possible_to_up_patient_status(self, patient_id: int) -> bool:
-        return self._get_patient_status_number(patient_id) != 3
-
-    def is_patient_status_already_max(self, patient_id: int) -> bool:
-        return self._get_patient_status_number(patient_id) == 3
+        self._check_patient_exists(patient_id)
+        return self._get_patient_status_number(patient_id) < 3
 
     def down_status_for_patient(self, patient_id: int):
+        self._check_patient_exists(patient_id)
         if self._get_patient_status_number(patient_id) == 0:
             raise AttemptLowerMinimumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
@@ -54,13 +53,9 @@ class Hospital:
 
         return patient_statistic
 
-    def get_total_number_patients(self):
+    def get_total_number_patients(self) -> int:
         return len(list(filter(lambda x: x is not None, self._patients)))
 
     def _check_patient_exists(self, patient_id: int):
-        try:
-            patient_status = self._patients[self._convert_patient_id_to_index(patient_id)]
-            if patient_status is None:
-                raise PatientIDNotExistsError
-        except IndexError:
+        if patient_id > len(self._patients) or self._patients[self._convert_patient_id_to_index(patient_id)] is None:
             raise PatientIDNotExistsError

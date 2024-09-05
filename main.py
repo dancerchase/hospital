@@ -1,8 +1,14 @@
 from application import Application
-from user_input_commands import UserInputCommands
-from user_output_commands import UserOutputCommands
+from input_output_manager import InputOutputManager
 from actions_for_commands import ActionsForCommands
+from hospital import Hospital
 
-application = Application(user_input_commands=UserInputCommands(), user_output_commands=UserOutputCommands(),
-                          actions_for_commands=ActionsForCommands())
+input_output_manager = InputOutputManager()
+
+hospital = Hospital()
+
+actions_for_commands = ActionsForCommands(input_output_manager, hospital)
+
+application = Application(input_output_manager, actions_for_commands)
+
 application.run_application()
