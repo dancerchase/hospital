@@ -12,10 +12,10 @@ class Application:
             self._actions_for_commands.send_message_patient_status()
 
         elif command in ['повысить статус пациента', 'status up']:
-            self._actions_for_commands.up_status_for_patient()
+            self._actions_for_commands.up_patient_status()
 
         elif command in ['понизить статус пациента', 'status down']:
-            self._actions_for_commands.down_status_for_patient()
+            self._actions_for_commands.down_patient_status()
 
         elif command in ['выписать пациента', 'discharge']:
             self._actions_for_commands.discharge_patient()
@@ -25,10 +25,10 @@ class Application:
 
         elif command in ['стоп', 'stop']:
             self._is_command_not_stop = False
-            self._input_output_manager.send_message_stop()
+            self._input_output_manager.send_message_application_stop()
 
         else:
-            self._input_output_manager.error_command_not_exist()
+            self._input_output_manager.send_message_command_not_exist_error()
 
     def run_application(self):
         while self._is_command_not_stop:
