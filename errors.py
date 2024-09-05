@@ -1,18 +1,13 @@
-class IDNotIntOrNegativeError(Exception):
-    """Класс для ошибки ввода ID пациента - если не целое положительное число"""
-    pass
+class PatientIDNotIntOrNegativeError(Exception):
+    def __init__(self):
+        super().__init__('Ошибка. ID пациента должно быть числом (целым, положительным)')
 
 
-class IDNotExistError(Exception):
-    """Класс для ошибки ввода ID пациента - если ID не существует"""
-    pass
+class PatientIDNotExistsError(Exception):
+    def __init__(self):
+        super().__init__('Ошибка. В больнице нет пациента с таким ID')
 
 
-class MinStatusError(Exception):
-    """Класс для ошибки минимизации ID пациента - если попытка уменьшить ID пациента меньше 0"""
-    pass
-
-
-class MaxStatusError(Exception):
-    """Класс для ошибки максимизации ID пациента - если попытка увеличить ID пациента больше 3"""
-    pass
+class AttemptLowerMinimumStatusError(Exception):
+    def __init__(self):
+        super().__init__('Ошибка. Нельзя понизить самый низкий статус (наши пациенты не умирают)')

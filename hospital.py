@@ -1,60 +1,48 @@
-from errors import IDNotExistError, MinStatusError, MaxStatusError
+from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError
 
 
 class Hospital:
-    """Класс для взаимодействия со списком пациентов"""
+    """Основная бизнес-логика работы приложения"""
 
     def __init__(self):
         self._patients = [1 for _ in range(200)]
         self._status = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
-    def _transformation_id(self, input_id: int) -> int:
-        """Преобразование id пациента в индекс в списке пациентов"""
-        return input_id - 1
-
     def get_patient_status_text(self, patient_id: int) -> str:
-        """Возвращает текстовое представление статуса пациента"""
-        patient_status_for_number_in_list = self._status[self.get_patient_status_number(patient_id)]
-        return patient_status_for_number_in_list
+        patient_status_text = self._status[self._get_patient_status_number(patient_id)]
+        return patient_status_text
 
-    def get_patient_status_number(self, patient_id: int) -> int:
-        """Возвращает статус пациента числовым значением из списка пациентов"""
-        patient_status_in_list = self._patients[self._get_patient_index(patient_id)]
+    def _get_patient_status_number(self, patient_id: int) -> int:
+        self._check_patient_exists(patient_id)
+        patient_status_number = self._patients[self._convert_patient_id_to_index(patient_id)]
+        return patient_status_number
 
-        if not isinstance(patient_status_in_list, int):
-            raise IDNotExistError
-
-        return patient_status_in_list
-
-    def _get_patient_index(self, patient_id: int) -> int:
-        """Возвращает индекс пациента в списке пациентов"""
-        return self._transformation_id(patient_id)
+    @staticmethod
+    def _convert_patient_id_to_index(patient_id: int) -> int:
+        return patient_id - 1
 
     def up_status_for_patient(self, patient_id: int):
-        """Увеличивает статус пациента на единицу"""
-        if self.get_patient_status_number(patient_id) == 3:
-            raise MaxStatusError
-        self._patients[self._get_patient_index(patient_id)] += 1
+        self._check_patient_exists(patient_id)
+        self._patients[self._convert_patient_id_to_index(patient_id)] += 1
+
+    def is_possible_to_up_patient_status(self, patient_id: int) -> bool:
+        return self._get_patient_status_number(patient_id) != 3
+
+    def is_patient_status_already_max(self, patient_id: int) -> bool:
+        return self._get_patient_status_number(patient_id) == 3
 
     def down_status_for_patient(self, patient_id: int):
-        """Уменьшает статус пациента на единицу"""
-        if self.get_patient_status_number(patient_id) == 0:
-            raise MinStatusError
-        self._patients[self._get_patient_index(patient_id)] -= 1
+        if self._get_patient_status_number(patient_id) == 0:
+            raise AttemptLowerMinimumStatusError
+        self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
 
     def patient_discharge(self, patient_id: int):
-        """Выписывает пациента из больницы"""
-        if not self._is_patient_valid_in_list(patient_id):
-            raise IDNotExistError
-        self._patients[self._get_patient_index(patient_id)] = None
+        self._check_patient_exists(patient_id)
+        self._patients[self._convert_patient_id_to_index(patient_id)] = None
 
-    def get_statistic_patients(self) -> dict[str, int]:
-        """Возвращает статистику по пациентам"""
-        patient_statistic = {'Всего': 0, 'Болен': 0, 'Слегка болен': 0, 'Тяжело болен': 0, 'Готов к выписке': 0}
+    def get_statistics_patients_statuses(self) -> dict[str, int]:
+        patient_statistic = {'Болен': 0, 'Слегка болен': 0, 'Тяжело болен': 0, 'Готов к выписке': 0}
         for i in self._patients:
-            if i is None:
-                continue
-            patient_statistic['Всего'] += 1
             if i == 0:
                 patient_statistic['Тяжело болен'] += 1
             elif i == 1:
@@ -66,19 +54,13 @@ class Hospital:
 
         return patient_statistic
 
-    def _is_patient_valid_in_list(self, patient_id: int) -> bool:
-        """Проверяет существование ID пациента в списке пациентов - ID не None"""
-        return self._patients[self._get_patient_index(patient_id)] is not None
+    def get_total_number_patients(self):
+        return len(list(filter(lambda x: x is not None, self._patients)))
 
-    def _get_len_patients_list(self) -> int:
-        """Возвращает длинну списка пациентов"""
-        return len(self._patients)
-
-    def _is_patient_id_exist(self, patient_id: int) -> bool:
-        """Проверяет правильность ввода ID пациента на существование"""
-        return (patient_id <= self._get_len_patients_list()) and (self._is_patient_valid_in_list(patient_id))
-
-    def check_patient_id_exist(self, patient_id: int):
-        """Получает ID пациента и проверяет есть ли такой пациент в списке пациентов"""
-        if not self._is_patient_id_exist(patient_id):
-            raise IDNotExistError
+    def _check_patient_exists(self, patient_id: int):
+        try:
+            patient_status = self._patients[self._convert_patient_id_to_index(patient_id)]
+            if patient_status is None:
+                raise PatientIDNotExistsError
+        except IndexError:
+            raise PatientIDNotExistsError

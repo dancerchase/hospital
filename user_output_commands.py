@@ -2,47 +2,36 @@ class UserOutputCommands:
     """Класс для Вывода информации на экран пользователю"""
 
     @staticmethod
-    def error_patient_id_not_int_or_negative():
-        print('Ошибка. ID пациента должно быть числом (целым, положительным)')
-
-    @staticmethod
-    def error_patient_id_not_exist():
-        print('Ошибка. В больнице нет пациента с таким ID')
-
-    @staticmethod
-    def not_approval_discharge():
-        print('Ошибка. Нельзя понизить самый низкий статус (наши пациенты не умирают)')
-
-    @staticmethod
-    def error_command_not_exist():
+    def print_command_not_exist_error():
         print('Неизвестная команда! Попробуйте ещё раз')
 
     @staticmethod
-    def new_status(new_status: str):
+    def print_new_status(new_status: str):
         print(f'Новый статус пациента: "{new_status}"')
 
     @staticmethod
-    def refusal_of_discharge():
+    def print_out_refusal_of_discharge():
         print('Пациент остался в статусе "Готов к выписке"')
 
     @staticmethod
-    def discharge():
+    def print_patient_discharge():
         print('Пациент выписан из больницы')
 
     @staticmethod
-    def stop():
+    def print_application_stop():
         print('Сеанс завершён.')
 
     @staticmethod
-    def statistic_patients(statistic: dict[str, int]):
-        print(f'В больнице на данный момент находится {statistic['Всего']} чел., из них:')
+    def print_hospital_statistics(statistic: dict[str, int], total_patients: int):
+        print(f'В больнице на данный момент находится {total_patients} чел., из них:')
         for key, value in statistic.items():
-            if key == 'Всего':
-                continue
-            elif value != 0:
+            if value != 0:
                 print(f'    - в статусе "{key}": {value} чел.')
 
     @staticmethod
     def print_patient_status(patient_status: str):
-        """Печать статуса пациента"""
         print(f'Статус пациента: "{patient_status}"')
+
+    @staticmethod
+    def print_received_text(text: str):
+        print(text)

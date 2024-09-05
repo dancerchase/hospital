@@ -1,44 +1,28 @@
-from errors import IDNotIntOrNegativeError, IDNotExistError
-from user_output_commands import UserOutputCommands
-from hospital import Hospital
+from errors import PatientIDNotIntOrNegativeError
 
 
 class UserInputCommands:
     """Класс для работы с командами которые вводит пользователь"""
 
-    def _get_input_command_from_user(self) -> str:
-        """Получает команду от пользователя"""
-        return input('Введите команду: ').lower()
-
-    def _get_patient_id_from_user(self) -> str:
-        """Получает ID пациента от пользователя"""
-        return input('Введите ID пациента: ')
-
     @staticmethod
-    def hospital_discharge_offer() -> str:
-        return input('Желаете этого клиента выписать? (да/нет): ').lower()
+    def request_for_discharge() -> bool:
+        return input('Желаете этого клиента выписать? (да/нет): ').lower() == 'да'
 
     def get_patient_id(self) -> int:
-        """Возвращает ID пациента"""
-        patient_id_str = self._get_patient_id_from_user()
-        patient_id_int = self._patient_id_from_str_to_int(patient_id_str)
-        return patient_id_int
+        patient_id_str = input('Введите ID пациента: ')
+        patient_id = self._convert_patient_id_from_str_to_positive_int(patient_id_str)
+        return patient_id
 
-    def _patient_id_from_str_to_int(self, patient_id: str) -> int:
-        """Получает ID пациента и преобразует его в положительный целочисленный тип"""
-        try:
-            patient_id_int = int(patient_id)
+    @staticmethod
+    def _convert_patient_id_from_str_to_positive_int(patient_id: str) -> int:
+        if not patient_id.isdigit() or int(patient_id) <= 0:
+            raise PatientIDNotIntOrNegativeError
+        return int(patient_id)
 
-            if patient_id_int <= 0:
-                raise IDNotIntOrNegativeError
-            return patient_id_int
-
-        except ValueError:
-            raise IDNotIntOrNegativeError
-
-    def get_command_type(self) -> str:
+    @staticmethod
+    def get_command_type() -> str:
         """Возвращает тип команды"""
-        command = self._get_input_command_from_user()
+        command = input('Введите команду: ').lower()
         command_type = {('узнать статус пациента', 'get status'): 'get_status',
                         ('повысить статус пациента', 'status up'): 'up_status',
                         ('понизить статус пациента', 'status down'): 'down_status',
