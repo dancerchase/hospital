@@ -61,16 +61,18 @@ class TestHospital(unittest.TestCase):
         self._hospital.up_status_for_patient(9)
         self._hospital.down_status_for_patient(10)
         self._hospital.patient_discharge(11)
+        self._hospital.get_patient_status_text(12)
         statistics = self._hospital.get_statistics_patients_statuses()
         self.assertEqual(statistics, {'Болен': 196, 'Слегка болен': 1, 'Тяжело болен': 1, 'Готов к выписке': 1})
 
     def test_get_total_number_patients(self):
-        """Тестируем общее количество пациентов"""
         self.assertEqual(self._hospital.get_total_number_patients(), 200)
-        self._hospital.patient_discharge(12)
+        self._hospital.patient_discharge(13)
+        self._hospital.up_status_for_patient(14)
+        self._hospital.down_status_for_patient(15)
+        self._hospital.get_patient_status_text(15)
         self.assertEqual(self._hospital.get_total_number_patients(), 199)
 
 
-# Запускаем тесты
 if __name__ == '__main__':
     unittest.main()
