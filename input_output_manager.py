@@ -10,11 +10,11 @@ class InputOutputManager:
 
     def get_patient_id(self) -> int:
         patient_id_as_str = input('Введите ID пациента: ')
-        patient_id = self._convert_patient_id_from_str_to_positive_int(patient_id_as_str)
+        patient_id = self.convert_patient_id_from_str_to_positive_int(patient_id_as_str)
         return patient_id
 
     @staticmethod
-    def _convert_patient_id_from_str_to_positive_int(patient_id: str) -> int:
+    def convert_patient_id_from_str_to_positive_int(patient_id: str) -> int:
         if not patient_id.isdigit() or int(patient_id) <= 0:
             raise PatientIDNotIntOrNegativeError
         return int(patient_id)
