@@ -1,16 +1,20 @@
-from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError
+from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, AttemptUpperMaximumStatusError
 
 
 class Hospital:
     """Основная бизнес-логика работы приложения"""
 
-    def __init__(self):
-        self._patients = [1 for _ in range(200)]
-        self._status = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+    def __init__(self, patients=None):
+        if patients:
+            self._patients = patients
+        else:
+            self._patients = [1 for _ in range(200)]
 
-    def get_patient_status_text(self, patient_id: int) -> str:
+        self._statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+
+    def get_patient_status(self, patient_id: int) -> str:
         self._check_patient_exists(patient_id)
-        patient_status_text = self._status[self._get_patient_status_number(patient_id)]
+        patient_status_text = self._statuses[self._get_patient_status_number(patient_id)]
         return patient_status_text
 
     def _get_patient_status_number(self, patient_id: int) -> int:
@@ -23,6 +27,8 @@ class Hospital:
 
     def up_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
+        if self._get_patient_status_number(patient_id) == 3:
+            raise AttemptUpperMaximumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] += 1
 
     def is_possible_to_up_patient_status(self, patient_id: int) -> bool:

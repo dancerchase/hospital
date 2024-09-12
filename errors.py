@@ -11,3 +11,8 @@ class PatientIDNotExistsError(Exception):
 class AttemptLowerMinimumStatusError(Exception):
     def __init__(self):
         super().__init__('Ошибка. Нельзя понизить самый низкий статус (наши пациенты не умирают)')
+
+
+class AttemptUpperMaximumStatusError(Exception):
+    def __init__(self):
+        super().__init__('Ошибка. Нельзя повысить самый высокий статус')

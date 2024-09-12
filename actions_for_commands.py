@@ -11,7 +11,7 @@ class ActionsForCommands:
     def send_message_patient_status(self):
         try:
             patient_id = self._input_output_manager.get_patient_id()
-            patient_status = self._hospital.get_patient_status_text(patient_id)
+            patient_status = self._hospital.get_patient_status(patient_id)
             self._input_output_manager.send_message_patient_status_text(patient_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
@@ -23,7 +23,7 @@ class ActionsForCommands:
 
             if self._hospital.is_possible_to_up_patient_status(patient_id):
                 self._hospital.up_status_for_patient(patient_id)
-                new_status = self._hospital.get_patient_status_text(patient_id)
+                new_status = self._hospital.get_patient_status(patient_id)
                 self._input_output_manager.send_message_new_status(new_status)
 
             else:
@@ -40,7 +40,7 @@ class ActionsForCommands:
         try:
             patient_id = self._input_output_manager.get_patient_id()
             self._hospital.down_status_for_patient(patient_id)
-            new_status = self._hospital.get_patient_status_text(patient_id)
+            new_status = self._hospital.get_patient_status(patient_id)
             self._input_output_manager.send_message_new_status(new_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError, AttemptLowerMinimumStatusError) as error:

@@ -1,78 +1,112 @@
-import unittest
+import pytest
 from hospital import Hospital
-from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError
+from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, AttemptUpperMaximumStatusError
 
 
-class TestHospital(unittest.TestCase):
+class TestHospital:
+    class TestGetPatientStatus:
+        def test_get_patient_status(self):
+            hospital = Hospital([2, 0])
+            assert hospital.get_patient_status(1) == "Слегка болен"
 
-    def setUp(self):
-        self._hospital = Hospital()
+        def test_get_status_patient_id_not_exists(self):
+            hospital = Hospital([1, 1, 1])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.get_patient_status(4)
 
-    def test_get_patient_status_text_valid_sick(self):
-        patient_id = 1
-        self.assertEqual(self._hospital.get_patient_status_text(patient_id), "Болен")
+        def test_get_patient_status_patient_already_discharged(self):
+            hospital = Hospital([2, None, 0])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.get_patient_status(2)
 
-    def test_get_patient_status_text_valid_very_sick(self):
-        patient_id = 2
-        self._hospital.down_status_for_patient(patient_id)
-        self.assertEqual(self._hospital.get_patient_status_text(patient_id), "Тяжело болен")
+        def test_patient_statuses(self):
+            assert Hospital()._statuses == {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
-    def test_get_patient_status_text_valid_slightly_sick(self):
-        patient_id = 3
-        self._hospital.up_status_for_patient(patient_id)
-        self.assertEqual(self._hospital.get_patient_status_text(patient_id), "Слегка болен")
+    class TestDownStatusForPatient:
+        def test_down_status_for_patient(self):
+            hospital = Hospital([3, 1])
+            hospital.down_status_for_patient(1)
+            assert hospital._patients == [2, 1]
 
-    def test_get_patient_status_text_valid_ready_to_discharge(self):
-        patient_id = 4
-        self._hospital.up_status_for_patient(patient_id)
-        self._hospital.up_status_for_patient(patient_id)
-        self.assertEqual(self._hospital.get_patient_status_text(patient_id), "Готов к выписке")
+        def test_down_status_for_patient_minimum_status(self):
+            hospital = Hospital([3, 0])
+            with pytest.raises(AttemptLowerMinimumStatusError):
+                hospital.down_status_for_patient(2)
+            assert hospital._patients == [3, 0]
 
-    def test_get_patient_status_text_invalid_id_too_high(self):
-        with self.assertRaises(PatientIDNotExistsError):
-            self._hospital.get_patient_status_text(201)
+        def test_down_status_for_patient_id_not_exists(self):
+            hospital = Hospital([1, 1, 1])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.down_status_for_patient(4)
 
-    def test_get_patient_status_text_patient_already_discharged(self):
-        patient_id = 5
-        self._hospital.patient_discharge(patient_id)
-        with self.assertRaises(PatientIDNotExistsError):
-            self._hospital.get_patient_status_text(patient_id)
+        def test_down_status_for_patient_already_discharged(self):
+            hospital = Hospital([2, None, 0])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.down_status_for_patient(2)
 
-    def test_down_status_for_patient(self):
-        patient_id = 6
-        self._hospital.down_status_for_patient(patient_id)
-        self.assertEqual(self._hospital.get_patient_status_text(patient_id), "Тяжело болен")
+    class TestUpStatusForPatient:
 
-    def test_down_status_for_patient_minimum_status(self):
-        patient_id = 7
-        self._hospital.down_status_for_patient(patient_id)
-        with self.assertRaises(AttemptLowerMinimumStatusError):
-            self._hospital.down_status_for_patient(patient_id)
+        def test_up_status_for_patient(self):
+            hospital = Hospital([3, 1])
+            hospital.up_status_for_patient(2)
+            assert hospital._patients == [3, 2]
 
-    def test_down_status_for_patient_already_discharged(self):
-        patient_id = 13
-        self._hospital.patient_discharge(patient_id)
-        with self.assertRaises(PatientIDNotExistsError):
-            self._hospital.get_patient_status_text(patient_id)
+        def test_up_status_for_patient_minimum_status(self):
+            hospital = Hospital([3, 0])
+            with pytest.raises(AttemptUpperMaximumStatusError):
+                hospital.up_status_for_patient(1)
+            assert hospital._patients == [3, 0]
 
-    def test_get_statistics_patients_statuses(self):
-        self._hospital.up_status_for_patient(8)
-        self._hospital.up_status_for_patient(8)
-        self._hospital.up_status_for_patient(9)
-        self._hospital.down_status_for_patient(10)
-        self._hospital.patient_discharge(11)
-        self._hospital.get_patient_status_text(12)
-        statistics = self._hospital.get_statistics_patients_statuses()
-        self.assertEqual(statistics, {'Болен': 196, 'Слегка болен': 1, 'Тяжело болен': 1, 'Готов к выписке': 1})
+        def test_up_status_for_patient_id_not_exists(self):
+            hospital = Hospital([1, 2])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.up_status_for_patient(4)
 
-    def test_get_total_number_patients(self):
-        self.assertEqual(self._hospital.get_total_number_patients(), 200)
-        self._hospital.patient_discharge(13)
-        self._hospital.up_status_for_patient(14)
-        self._hospital.down_status_for_patient(15)
-        self._hospital.get_patient_status_text(15)
-        self.assertEqual(self._hospital.get_total_number_patients(), 199)
+        def test_up_status_for_patient_already_discharged(self):
+            hospital = Hospital([2, None])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.up_status_for_patient(2)
 
+    class TestIsPossibleToUpPatientStatus:
+        def test_is_possible_to_up_patient_status(self):
+            hospital = Hospital([3, 1])
+            assert hospital.is_possible_to_up_patient_status(2) == True
+            assert hospital.is_possible_to_up_patient_status(1) == False
 
-if __name__ == '__main__':
-    unittest.main()
+    class TestPatientDischarge:
+        def test_patient_discharge(self):
+            hospital = Hospital([3, 1])
+            hospital.patient_discharge(2)
+            assert hospital._patients == [3, None]
+
+        def test_patient_discharge_id_not_exists(self):
+            hospital = Hospital([1, 2, 3])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.patient_discharge(6)
+
+        def test_patient_discharge_already_discharged(self):
+            hospital = Hospital([2, None, None])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital.patient_discharge(3)
+
+    class TestGetTotalNumberPatients:
+        def test_get_total_number_patients(self):
+            hospital = Hospital([1, 2, None, 1, 3, 0, None])
+            assert hospital.get_total_number_patients() == 5
+
+    class TestGetStatisticsPatientsStatuses:
+        def test_get_statistics_patients_statuses(self):
+            hospital = Hospital([1, 2, None, 3, 0, None, 1])
+            assert hospital.get_statistics_patients_statuses() == {'Болен': 2, 'Слегка болен': 1, 'Тяжело болен': 1,
+                                                                   'Готов к выписке': 1}
+
+    class TestCheckPatientExists:
+        def test_patient_id_not_in_patient_list(self):
+            hospital = Hospital([1, 2, 3])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital._check_patient_exists(4)
+
+        def test_patient_status_in_patient_list_is_none(self):
+            hospital = Hospital([None, 2, 3])
+            with pytest.raises(PatientIDNotExistsError):
+                hospital._check_patient_exists(1)
