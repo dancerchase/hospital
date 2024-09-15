@@ -46,16 +46,16 @@ class Hospital:
         self._patients[self._convert_patient_id_to_index(patient_id)] = None
 
     def get_statistics_patients_statuses(self) -> dict[str, int]:
-        patient_statistic = {'Болен': 0, 'Слегка болен': 0, 'Тяжело болен': 0, 'Готов к выписке': 0}
+        patient_statistic = dict()
         for i in self._patients:
             if i == 0:
-                patient_statistic['Тяжело болен'] += 1
+                patient_statistic['Тяжело болен'] = patient_statistic.get('Тяжело болен', 0) + 1
             elif i == 1:
-                patient_statistic['Болен'] += 1
+                patient_statistic['Болен'] = patient_statistic.get('Болен', 0) + 1
             elif i == 2:
-                patient_statistic['Слегка болен'] += 1
+                patient_statistic['Слегка болен'] = patient_statistic.get('Слегка болен', 0) + 1
             elif i == 3:
-                patient_statistic['Готов к выписке'] += 1
+                patient_statistic['Готов к выписке'] = patient_statistic.get('Готов к выписке', 0) + 1
 
         return patient_statistic
 
