@@ -8,14 +8,14 @@ class ActionsForCommands:
         self._input_output_manager = input_output_manager
         self._hospital = hospital
 
-    def send_message_patient_status(self):
+    def get_patient_status(self):
         try:
             patient_id = self._input_output_manager.get_patient_id()
             patient_status = self._hospital.get_patient_status(patient_id)
             self._input_output_manager.send_message_patient_status_text(patient_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
-            self._input_output_manager.send_message_with_received_text(error)
+            self._input_output_manager.send_message_with_received_text(str(error))
 
     def up_patient_status(self):
         try:
@@ -34,7 +34,7 @@ class ActionsForCommands:
                     self._input_output_manager.send_message_out_refusal_of_discharge()
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
-            self._input_output_manager.send_message_with_received_text(error)
+            self._input_output_manager.send_message_with_received_text(str(error))
 
     def down_patient_status(self):
         try:
@@ -44,7 +44,7 @@ class ActionsForCommands:
             self._input_output_manager.send_message_new_status(new_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError, AttemptLowerMinimumStatusError) as error:
-            self._input_output_manager.send_message_with_received_text(error)
+            self._input_output_manager.send_message_with_received_text(str(error))
 
     def discharge_patient(self):
         try:
@@ -53,7 +53,7 @@ class ActionsForCommands:
             self._input_output_manager.send_message_patient_discharge()
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
-            self._input_output_manager.send_message_with_received_text(error)
+            self._input_output_manager.send_message_with_received_text(str(error))
 
     def send_message_hospital_statistics(self):
         statistic = self._hospital.get_statistics_patients_statuses()

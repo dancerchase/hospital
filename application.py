@@ -9,7 +9,7 @@ class Application:
     def _performing_an_action_based_on_a_command(self, command: str):
 
         if command in ['узнать статус пациента', 'get status']:
-            self._actions_for_commands.send_message_patient_status()
+            self._actions_for_commands.get_patient_status()
 
         elif command in ['повысить статус пациента', 'status up']:
             self._actions_for_commands.up_patient_status()
