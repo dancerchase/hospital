@@ -55,7 +55,7 @@ class ActionsForCommands:
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
             self._input_output_manager.send_message_with_received_text(str(error))
 
-    def send_message_hospital_statistics(self):
+    def get_hospital_statistics(self):
         statistic = self._hospital.get_statistics_patients_statuses()
         total_patients = self._hospital.get_total_number_patients()
         self._input_output_manager.send_message_hospital_statistics_text(statistic, total_patients)

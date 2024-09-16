@@ -21,7 +21,7 @@ class Application:
             self._actions_for_commands.discharge_patient()
 
         elif command in ['рассчитать статистику', 'calculate statistics']:
-            self._actions_for_commands.send_message_hospital_statistics()
+            self._actions_for_commands.get_hospital_statistics()
 
         elif command in ['стоп', 'stop']:
             self._is_command_not_stop = False
