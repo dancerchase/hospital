@@ -122,7 +122,7 @@ class TestActionsForCommands:
             input_output_manager.send_message_new_status.assert_called_once_with('Тяжело болен')
             assert hospital._patients == [3, 0]
 
-        def test_up_status_for_patient_minimum_status(self):
+        def test_down_status_for_patient_minimum_status(self):
             input_output_manager = MagicMock()
             input_output_manager.get_patient_id.return_value = 1
             hospital = Hospital([0, 3])
@@ -195,7 +195,7 @@ class TestActionsForCommands:
             input_output_manager.send_message_with_received_text.assert_called_once_with(
                 'Ошибка. ID пациента должно быть числом (целым, положительным)')
 
-        def test_discharge_patient_patient_already_discharged(self):
+        def test_discharge_patient_already_discharged(self):
             input_output_manager = MagicMock()
             input_output_manager.get_patient_id.return_value = 2
             hospital = Hospital([1, None, 0])

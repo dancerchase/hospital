@@ -1,23 +1,12 @@
-from errors import PatientIDNotIntOrNegativeError
-
-
-class InputOutputManager:
-    """Объединяет методы для получения ввода от пользователя и вывода информации на экран."""
+class Console:
 
     @staticmethod
-    def request_for_discharge() -> bool:
-        return input('Желаете этого клиента выписать? (да/нет): ').lower() == 'да'
-
-    def get_patient_id(self) -> int:
-        patient_id_as_str = input('Введите ID пациента: ')
-        patient_id = self._convert_patient_id_from_str_to_positive_int(patient_id_as_str)
-        return patient_id
+    def request_for_discharge() -> str:
+        return input('Желаете этого клиента выписать? (да/нет): ').lower()
 
     @staticmethod
-    def _convert_patient_id_from_str_to_positive_int(patient_id: str) -> int:
-        if not patient_id.isdigit() or int(patient_id) <= 0:
-            raise PatientIDNotIntOrNegativeError
-        return int(patient_id)
+    def get_patient_id() -> str:
+        return input('Введите ID пациента: ')
 
     @staticmethod
     def get_command_from_user() -> str:
