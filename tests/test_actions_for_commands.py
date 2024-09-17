@@ -15,7 +15,7 @@ class TestActionsForCommands:
 
             actions_for_commands.get_patient_status()
 
-            input_output_manager.send_message_patient_status_text.assert_called_once_with('Слегка болен')
+            input_output_manager.send_message_patient_status.assert_called_once_with('Слегка болен')
 
         def test_get_patient_status_id_not_exists(self):
             input_output_manager = MagicMock()
