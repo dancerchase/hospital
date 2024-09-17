@@ -8,7 +8,7 @@ from application import Application
 
 class TestApplication:
 
-    def test_one_base_scenario(self):
+    def test_first_base_scenario(self):
         console = MagicMock()
         input_output_manager = InputOutputManager(console)
         hospital = Hospital()
@@ -67,6 +67,48 @@ class TestApplication:
         input_output_manager.send_message_application_stop()
 
         # start
+        application.run_application()
+
+        console.assert_has_calls([
+            call.input('Введите команду: '),
+            call.input('Введите ID пациента: '),
+            call.output('Статус пациента: "Болен"'),
+            call.input('Введите команду: '),
+            call.input('Введите ID пациента: '),
+            call.output('Новый статус пациента: "Слегка болен"'),
+            call.input('Введите команду: '),
+            call.input('Введите ID пациента: '),
+            call.output('Новый статус пациента: "Тяжело болен"'),
+            call.input('Введите команду: '),
+            call.input('Введите ID пациента: '),
+            call.output('Пациент выписан из больницы'),
+            call.input('Введите команду: '),
+            call.output('В больнице на данный момент находится 199 чел., из них:'),
+            call.output('    - в статусе "Болен": 197 чел.'),
+            call.output('    - в статусе "Слегка болен": 1 чел.'),
+            call.output('    - в статусе "Тяжело болен": 1 чел.'),
+            call.input('Введите команду: '),
+            call.output('Сеанс завершён.')
+        ])
+
+    def test_second_base_scenario(self):
+        console = MagicMock()
+        input_output_manager = InputOutputManager(console)
+        hospital = Hospital()
+        actions_for_commands = ActionsForCommands(input_output_manager, hospital)
+        application = Application(input_output_manager, actions_for_commands)
+        console.input.side_effect = [
+            'узнать статус пациента',
+            '200',
+            'status up',
+            '2',
+            'status down',
+            '3',
+            'discharge',
+            '4',
+            'рассчитать статистику',
+            'стоп']
+
         application.run_application()
 
         console.assert_has_calls([
