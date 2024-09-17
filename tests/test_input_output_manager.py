@@ -18,7 +18,7 @@ class TestInputOutputManager:
         def test_request_for_discharge_not_confirm(self):
             console = MagicMock()
             input_output_manager = InputOutputManager(console)
-            console.request_for_discharge.return_value = 'нет'
+            console.input.return_value = 'нет'
 
             assert not input_output_manager.request_for_discharge()
             console.input.assert_called_once_with('Желаете этого клиента выписать? (да/нет): ')
@@ -125,7 +125,7 @@ class TestInputOutputManager:
             input_output_manager = InputOutputManager(console)
             patient_status = 'Болен'
 
-            input_output_manager.send_message_patient_status_text(patient_status)
+            input_output_manager.send_message_patient_status(patient_status)
 
             console.output.assert_called_once_with(f'Статус пациента: "{patient_status}"')
 

@@ -12,7 +12,7 @@ class ActionsForCommands:
         try:
             patient_id = self._input_output_manager.get_patient_id()
             patient_status = self._hospital.get_patient_status(patient_id)
-            self._input_output_manager.send_message_patient_status_text(patient_status)
+            self._input_output_manager.send_message_patient_status(patient_status)
 
         except (PatientIDNotIntOrNegativeError, PatientIDNotExistsError) as error:
             self._input_output_manager.send_message_with_received_text(str(error))

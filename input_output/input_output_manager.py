@@ -45,7 +45,7 @@ class InputOutputManager:
             if value != 0:
                 self._console.output(f'    - в статусе "{key}": {value} чел.')
 
-    def send_message_patient_status_text(self, patient_status: str):
+    def send_message_patient_status(self, patient_status: str):
         self._console.output(f'Статус пациента: "{patient_status}"')
 
     def send_message_with_received_text(self, text: str):
