@@ -93,7 +93,7 @@ class TestActionsForCommands:
 
             actions_for_commands.up_patient_status()
 
-            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError))
+            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError()))
 
         def test_up_patient_status_id_not_int_or_negative(self):
             input_output_manager = MagicMock()
@@ -104,7 +104,7 @@ class TestActionsForCommands:
             actions_for_commands.up_patient_status()
 
             input_output_manager.send_message_with_received_text.assert_called_once_with(
-                str(PatientIDNotIntOrNegativeError))
+                str(PatientIDNotIntOrNegativeError()))
 
         def test_up_patient_status_patient_already_discharged(self):
             input_output_manager = MagicMock()
@@ -114,7 +114,7 @@ class TestActionsForCommands:
 
             actions_for_commands.up_patient_status()
 
-            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError))
+            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError()))
 
     class TestDownPatientStatus:
 
@@ -139,7 +139,7 @@ class TestActionsForCommands:
 
             assert hospital._patients == [0, 3]
             input_output_manager.send_message_new_status.send_message_with_received_text(
-                str(AttemptLowerMinimumStatusError))
+                str(AttemptLowerMinimumStatusError()))
 
         def test_down_patient_status_id_not_exists(self):
             input_output_manager = MagicMock()
@@ -160,7 +160,7 @@ class TestActionsForCommands:
             actions_for_commands.down_patient_status()
 
             input_output_manager.send_message_with_received_text.assert_called_once_with(
-                str(PatientIDNotIntOrNegativeError))
+                str(PatientIDNotIntOrNegativeError()))
 
         def test_down_patient_status_patient_already_discharged(self):
             input_output_manager = MagicMock()
@@ -170,7 +170,7 @@ class TestActionsForCommands:
 
             actions_for_commands.down_patient_status()
 
-            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError))
+            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError()))
 
     class TestDischargePatient:
 
@@ -193,7 +193,7 @@ class TestActionsForCommands:
 
             actions_for_commands.discharge_patient()
 
-            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError))
+            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError()))
 
         def test_discharge_patient_id_not_int_or_negative(self):
             input_output_manager = MagicMock()
@@ -204,7 +204,7 @@ class TestActionsForCommands:
             actions_for_commands.discharge_patient()
 
             input_output_manager.send_message_with_received_text.assert_called_once_with(
-                str(PatientIDNotIntOrNegativeError))
+                str(PatientIDNotIntOrNegativeError()))
 
         def test_discharge_patient_already_discharged(self):
             input_output_manager = MagicMock()
@@ -214,7 +214,7 @@ class TestActionsForCommands:
 
             actions_for_commands.discharge_patient()
 
-            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError))
+            input_output_manager.send_message_with_received_text.assert_called_once_with(str(PatientIDNotExistsError()))
 
     class TestGetHospitalStatistics:
 
