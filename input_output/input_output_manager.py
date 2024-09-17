@@ -8,10 +8,10 @@ class InputOutputManager:
         self._console = console
 
     def request_for_discharge(self) -> bool:
-        return self._console.request_for_discharge() == 'да'
+        return self._console.input('Желаете этого клиента выписать? (да/нет): ') == 'да'
 
     def get_patient_id(self) -> int:
-        patient_id_as_str = self._console.get_patient_id()
+        patient_id_as_str = self._console.input('Введите ID пациента: ')
         patient_id = self._convert_patient_id_from_str_to_positive_int(patient_id_as_str)
         return patient_id
 
@@ -22,28 +22,30 @@ class InputOutputManager:
         return int(patient_id)
 
     def get_command_from_user(self) -> str:
-        return self._console.get_command_from_user()
+        return self._console.input('Введите команду: ')
 
     def send_message_command_not_exist_error(self):
-        self._console.send_message_command_not_exist_error()
+        self._console.output('Неизвестная команда! Попробуйте ещё раз')
 
     def send_message_new_status(self, new_status: str):
-        self._console.send_message_new_status(new_status)
+        self._console.output(f'Новый статус пациента: "{new_status}"')
 
     def send_message_out_refusal_of_discharge(self):
-        self._console.send_message_out_refusal_of_discharge()
+        self._console.output('Пациент остался в статусе "Готов к выписке"')
 
     def send_message_patient_discharge(self):
-        self._console.send_message_patient_discharge()
+        self._console.output('Пациент выписан из больницы')
 
     def send_message_application_stop(self):
-        self._console.send_message_application_stop()
+        self._console.output('Сеанс завершён.')
 
     def send_message_hospital_statistics_text(self, statistics: dict[str, int], total_patients: int):
-        self._console.send_message_hospital_statistics_text(statistics, total_patients)
-
+        self._console.output(f'В больнице на данный момент находится {total_patients} чел., из них:')
+        for key, value in statistics.items():
+            if value != 0:
+                self._console.output(f'    - в статусе "{key}": {value} чел.')
     def send_message_patient_status_text(self, patient_status: str):
-        self._console.send_message_patient_status_text(patient_status)
+        self._console.output(f'Статус пациента: "{patient_status}"')
 
     def send_message_with_received_text(self, text: str):
-        self._console.send_message_with_received_text(text)
+        self._console.output(text)
