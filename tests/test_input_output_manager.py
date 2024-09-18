@@ -81,7 +81,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_new_status(new_status)
 
-            console.output.assert_called_once_with(f'Новый статус пациента: "{new_status}"')
+            console.output.assert_called_once_with(f'Новый статус пациента: "Болен"')
 
         def test_send_message_out_refusal_of_discharge(self):
             console = MagicMock()
@@ -116,7 +116,7 @@ class TestInputOutputManager:
             input_output_manager.send_message_hospital_statistics_text(statistics, total_patients)
 
             console.output.assert_has_calls([
-                call.output(f'В больнице на данный момент находится {total_patients} чел., из них:'),
+                call.output(f'В больнице на данный момент находится 6 чел., из них:'),
                 call.output(f'    - в статусе "Болен": 5 чел.'),
                 call.output(f'    - в статусе "Готов к выписке": 1 чел.')])
 
@@ -127,7 +127,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_patient_status(patient_status)
 
-            console.output.assert_called_once_with(f'Статус пациента: "{patient_status}"')
+            console.output.assert_called_once_with(f'Статус пациента: "Болен"')
 
         def test_send_message_with_received_text(self):
             console = MagicMock()
