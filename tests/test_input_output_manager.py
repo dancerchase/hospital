@@ -72,7 +72,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_command_not_exist_error()
 
-            console.output.assert_called_once_with('Неизвестная команда! Попробуйте ещё раз')
+            console.print.assert_called_once_with('Неизвестная команда! Попробуйте ещё раз')
 
         def test_send_message_new_status(self):
             console = MagicMock()
@@ -81,7 +81,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_new_status(new_status)
 
-            console.output.assert_called_once_with(f'Новый статус пациента: "Болен"')
+            console.print.assert_called_once_with(f'Новый статус пациента: "Болен"')
 
         def test_send_message_out_refusal_of_discharge(self):
             console = MagicMock()
@@ -89,7 +89,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_out_refusal_of_discharge()
 
-            console.output.assert_called_once_with('Пациент остался в статусе "Готов к выписке"')
+            console.print.assert_called_once_with('Пациент остался в статусе "Готов к выписке"')
 
         def test_send_message_patient_discharge(self):
             console = MagicMock()
@@ -97,7 +97,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_patient_discharge()
 
-            console.output.assert_called_once_with('Пациент выписан из больницы')
+            console.print.assert_called_once_with('Пациент выписан из больницы')
 
         def test_send_message_application_stop(self):
             console = MagicMock()
@@ -105,7 +105,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_application_stop()
 
-            console.output.assert_called_once_with('Сеанс завершён.')
+            console.print.assert_called_once_with('Сеанс завершён.')
 
         def test_send_message_hospital_statistics_text(self):
             console = MagicMock()
@@ -115,10 +115,10 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_hospital_statistics_text(statistics, total_patients)
 
-            console.output.assert_has_calls([
-                call.output(f'В больнице на данный момент находится 6 чел., из них:'),
-                call.output(f'    - в статусе "Болен": 5 чел.'),
-                call.output(f'    - в статусе "Готов к выписке": 1 чел.')])
+            console.print.assert_has_calls([
+                call.print('В больнице на данный момент находится 6 чел., из них:' +
+                           '\n    - в статусе "Болен": 5 чел.' +
+                           '\n    - в статусе "Готов к выписке": 1 чел.')])
 
         def test_send_message_patient_status_text(self):
             console = MagicMock()
@@ -127,7 +127,7 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_patient_status(patient_status)
 
-            console.output.assert_called_once_with(f'Статус пациента: "Болен"')
+            console.print.assert_called_once_with(f'Статус пациента: "Болен"')
 
         def test_send_message_with_received_text(self):
             console = MagicMock()
@@ -135,4 +135,4 @@ class TestInputOutputManager:
 
             input_output_manager.send_message_with_received_text('Текст ошибки')
 
-            console.output.assert_called_once_with('Текст ошибки')
+            console.print.assert_called_once_with('Текст ошибки')

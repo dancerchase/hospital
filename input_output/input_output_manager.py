@@ -25,28 +25,30 @@ class InputOutputManager:
         return self._console.input('Введите команду: ')
 
     def send_message_command_not_exist_error(self):
-        self._console.output('Неизвестная команда! Попробуйте ещё раз')
+        self._console.print('Неизвестная команда! Попробуйте ещё раз')
 
     def send_message_new_status(self, new_status: str):
-        self._console.output(f'Новый статус пациента: "{new_status}"')
+        self._console.print(f'Новый статус пациента: "{new_status}"')
 
     def send_message_out_refusal_of_discharge(self):
-        self._console.output('Пациент остался в статусе "Готов к выписке"')
+        self._console.print('Пациент остался в статусе "Готов к выписке"')
 
     def send_message_patient_discharge(self):
-        self._console.output('Пациент выписан из больницы')
+        self._console.print('Пациент выписан из больницы')
 
     def send_message_application_stop(self):
-        self._console.output('Сеанс завершён.')
+        self._console.print('Сеанс завершён.')
 
     def send_message_hospital_statistics_text(self, statistics: dict[str, int], total_patients: int):
-        self._console.output(f'В больнице на данный момент находится {total_patients} чел., из них:')
+        string_statistics = f'В больнице на данный момент находится {total_patients} чел., из них:'
         for key, value in statistics.items():
             if value != 0:
-                self._console.output(f'    - в статусе "{key}": {value} чел.')
+                string_statistics += f'\n    - в статусе "{key}": {value} чел.'
+
+        self._console.print(string_statistics)
 
     def send_message_patient_status(self, patient_status: str):
-        self._console.output(f'Статус пациента: "{patient_status}"')
+        self._console.print(f'Статус пациента: "{patient_status}"')
 
     def send_message_with_received_text(self, text: str):
-        self._console.output(text)
+        self._console.print(text)

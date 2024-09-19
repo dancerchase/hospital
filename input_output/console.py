@@ -4,5 +4,5 @@ class Console:
         return input(message).lower()
 
     @staticmethod
-    def output(message: str):
+    def print(message: str):
         print(message)
