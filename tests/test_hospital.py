@@ -191,8 +191,7 @@ class TestHospital:
         def test_add_new_patient(self):
             hospital = Hospital([1, 2])
 
-            hospital.add_new_patient('Болен')
-
+            assert hospital.add_new_patient('Болен') == 3
             assert hospital._patients == [1, 2, 1]
 
         def test_add_new_patient_invalid_status(self):
