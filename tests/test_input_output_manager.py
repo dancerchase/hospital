@@ -151,6 +151,6 @@ class TestInputOutputManager:
             console = MagicMock()
             input_output_manager = InputOutputManager(console)
 
-            input_output_manager.send_message_patient_added('Болен')
+            input_output_manager.send_message_patient_added(5)
 
-            console.print.assert_called_once_with(f'Пациент добавлен со статусом: "Болен"')
+            console.print.assert_called_once_with(f'Пациент добавлен с ID: 5')

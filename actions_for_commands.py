@@ -62,5 +62,5 @@ class ActionsForCommands:
 
     def add_new_patient(self):
         status = self._input_output_manager.get_new_patient_status()
-        self._hospital.add_new_patient(status)
-        self._input_output_manager.send_message_patient_added(status)
+        patient_id = self._hospital.add_new_patient(status)
+        self._input_output_manager.send_message_patient_added(patient_id)

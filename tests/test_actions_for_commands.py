@@ -239,4 +239,4 @@ class TestActionsForCommands:
             actions_for_commands.add_new_patient()
 
             assert hospital._patients == [1, 2, 3, 3]
-            input_output_manager.send_message_patient_added.assert_called_once_with("Готов к выписке")
+            input_output_manager.send_message_patient_added.assert_called_once_with(4)

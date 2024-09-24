@@ -73,7 +73,7 @@ class Hospital:
     def add_new_patient(self, status: str):
         status_number = self._get_number_status(status)
         self._patients.append(status_number)
-        return self._patients.index(status_number, -1)
+        return self._patients.index(status_number, -1) + 1
 
     def _get_number_status(self, status: str) -> int:
         for key, value in self._statuses.items():
