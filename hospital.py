@@ -71,6 +71,7 @@ class Hospital:
         return min(self._statuses.keys())
 
     def add_new_patient(self, status: str):
+        self._check_status(status)
         status_number = self._get_number_status(status)
         self._patients.append(status_number)
         return self._patients.index(status_number, -1) + 1
@@ -79,3 +80,7 @@ class Hospital:
         for key, value in self._statuses.items():
             if value == status:
                 return key
+
+    def _check_status(self, status: str):
+        if status not in self._statuses.values():
+            raise PatientIDNotExistsError

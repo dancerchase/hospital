@@ -1,6 +1,7 @@
 import pytest
 from hospital import Hospital
-from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, AttemptUpperMaximumStatusError
+from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, AttemptUpperMaximumStatusError, \
+    PatientStatusNotExistsError
 
 
 class TestHospital:
@@ -197,7 +198,7 @@ class TestHospital:
         def test_add_new_patient_invalid_status(self):
             hospital = Hospital([1, 2])
 
-            with pytest.raises(InvalidStatusError):
+            with pytest.raises(PatientIDNotExistsError):
                 hospital.add_new_patient('Инвалидный статус')
 
             assert hospital._patients == [1, 2]
