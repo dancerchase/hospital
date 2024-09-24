@@ -188,8 +188,16 @@ class TestHospital:
     class TestAddNewPatient:
 
         def test_add_new_patient(self):
-            hospital = Hospital(patients=[1, 2], statuses={1: "Слабое состояние", 2: "Стабильное состояние"})
+            hospital = Hospital([1, 2])
 
-            hospital.add_new_patient('Слабое состояние')
+            hospital.add_new_patient('Болен')
 
             assert hospital._patients == [1, 2, 1]
+
+        def test_add_new_patient_invalid_status(self):
+            hospital = Hospital([1, 2])
+
+            with pytest.raises(InvalidStatusError):
+                hospital.add_new_patient('Инвалидный статус')
+
+            assert hospital._patients == [1, 2]
