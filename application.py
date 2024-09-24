@@ -23,6 +23,9 @@ class Application:
         elif command in ['рассчитать статистику', 'calculate statistics']:
             self._actions_for_commands.get_hospital_statistics()
 
+        elif command in ['добавить пациента', 'add patient']:
+            self._actions_for_commands.add_new_patient()
+
         elif command in ['стоп', 'stop']:
             self._is_command_not_stop = False
             self._input_output_manager.send_message_application_stop()
