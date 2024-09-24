@@ -42,7 +42,7 @@ class TestHospital:
 
         def test_down_status_for_patient(self):
             hospital = Hospital(patients=[5, 0],
-                                statuses={0: "Состояние средней тяжести", 4: "Готов к выписке", 5: "Слабое состояние"})
+                                statuses={0: "Состояние средней тяжести", 4: "Слегка болен", 5: "Готов к выписке"})
 
             hospital.down_status_for_patient(1)
 
