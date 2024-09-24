@@ -1,4 +1,5 @@
-from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, AttemptUpperMaximumStatusError
+from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, AttemptUpperMaximumStatusError, \
+    PatientStatusNotExistsError
 
 
 class Hospital:
@@ -71,7 +72,7 @@ class Hospital:
         return min(self._statuses.keys())
 
     def add_new_patient(self, status: str):
-        self._check_status(status)
+        self._check_status_exist(status)
         status_number = self._get_number_status(status)
         self._patients.append(status_number)
         return self._patients.index(status_number, -1) + 1
@@ -81,6 +82,6 @@ class Hospital:
             if value == status:
                 return key
 
-    def _check_status(self, status: str):
+    def _check_status_exist(self, status: str):
         if status not in self._statuses.values():
-            raise PatientIDNotExistsError
+            raise PatientStatusNotExistsError

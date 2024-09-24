@@ -207,10 +207,10 @@ class TestHospital:
 
         def test_check_status_exists(self):
             hospital = Hospital(statuses={0: "Состояние средней тяжести"})
-            hospital._check_status('Состояние средней тяжести')
+            hospital._check_status_exist('Состояние средней тяжести')
 
         def test_check_status_not_exists(self):
             hospital = Hospital(statuses={0: "Состояние средней тяжести"})
 
             with pytest.raises(PatientIDNotExistsError):
-                hospital._check_status('несуществующий статус')
+                hospital._check_status_exist('несуществующий статус')
