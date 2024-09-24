@@ -4,13 +4,16 @@ from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, Atte
 class Hospital:
     """Основная бизнес-логика работы приложения"""
 
-    def __init__(self, patients=None):
+    def __init__(self, patients=None, statuses=None):
         if patients:
             self._patients = patients
         else:
             self._patients = [1 for _ in range(200)]
 
-        self._statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+        if statuses:
+            self._statuses = statuses
+        else:
+            self._statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
     def get_patient_status(self, patient_id: int) -> str:
         self._check_patient_exists(patient_id)
