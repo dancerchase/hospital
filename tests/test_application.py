@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock, call
 from hospital import Hospital
 from actions_for_commands import ActionsForCommands
