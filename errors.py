@@ -16,3 +16,8 @@ class AttemptLowerMinimumStatusError(Exception):
 class AttemptUpperMaximumStatusError(Exception):
     def __init__(self):
         super().__init__('Ошибка. Нельзя повысить самый высокий статус')
+
+
+class PatientStatusNotExistsError(Exception):
+    def __init__(self):
+        super().__init__('Ошибка. В больнице нет такого статуса')
