@@ -227,3 +227,15 @@ class TestActionsForCommands:
 
             input_output_manager.send_message_hospital_statistics_text.assert_called_once_with(
                 {'Готов к выписке': 2, 'Тяжело болен': 1, 'Слегка болен': 1}, 4)
+
+    class TestAddNewPatient:
+
+        def test_add_new_patient(self):
+            input_output_manager = MagicMock()
+            hospital = Hospital([1, 2, 3])
+            actions_for_commands = ActionsForCommands(input_output_manager, hospital)
+
+            actions_for_commands.add_new_patient('Готов к выписке')
+
+            assert hospital._patients == [1, 2, 3, 3]
+            input_output_manager.send_message_new_status.assert_called_once_with('Готов к выписке')
