@@ -144,15 +144,27 @@ class TestHospital:
     class TestGetStatisticsPatientsStatuses:
 
         def test_get_statistics_patients_statuses_all(self):
-            hospital = Hospital([1, 2, None, 3, 0, None, 1])
+            hospital = Hospital(patients=[1, 2, None, 3, 0, None, 1],
+                                statuses={0: "Состояние средней тяжести",
+                                          1: "Слабое состояние",
+                                          2: "Стабильное состояние",
+                                          3: "Готов к выписке"})
 
-            assert hospital.get_statistics_patients_statuses() == {'Болен': 2, 'Слегка болен': 1, 'Тяжело болен': 1,
+            assert hospital.get_statistics_patients_statuses() == {'Состояние средней тяжести': 1,
+                                                                   'Слабое состояние': 2,
+                                                                   'Стабильное состояние': 1,
                                                                    'Готов к выписке': 1}
 
         def test_get_statistics_patients_statuses(self):
-            hospital = Hospital([1, 2, 3, None])
+            hospital = Hospital(patients=[1, 2, 3, None],
+                                statuses={0: "Состояние средней тяжести",
+                                          1: "Слабое состояние",
+                                          2: "Стабильное состояние",
+                                          3: "Готов к выписке"})
 
-            assert hospital.get_statistics_patients_statuses() == {'Болен': 1, 'Слегка болен': 1, 'Готов к выписке': 1}
+            assert hospital.get_statistics_patients_statuses() == {'Слабое состояние': 1,
+                                                                   'Стабильное состояние': 1,
+                                                                   'Готов к выписке': 1}
 
     class TestCheckPatientExists:
 
