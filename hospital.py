@@ -30,17 +30,17 @@ class Hospital:
 
     def up_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == 3:
+        if self._get_patient_status_number(patient_id) == self._max_status_number():
             raise AttemptUpperMaximumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] += 1
 
     def is_possible_to_up_patient_status(self, patient_id: int) -> bool:
         self._check_patient_exists(patient_id)
-        return self._get_patient_status_number(patient_id) < 3
+        return self._get_patient_status_number(patient_id) < self._max_status_number()
 
     def down_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == 0:
+        if self._get_patient_status_number(patient_id) == self._min_status_number():
             raise AttemptLowerMinimumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
 
@@ -68,3 +68,9 @@ class Hospital:
     def _check_patient_exists(self, patient_id: int):
         if patient_id > len(self._patients) or self._patients[self._convert_patient_id_to_index(patient_id)] is None:
             raise PatientIDNotExistsError
+
+    def _max_status_number(self) -> int:
+        return max(self._statuses.keys())
+
+    def _min_status_number(self) -> int:
+        return min(self._statuses.keys())
