@@ -184,3 +184,12 @@ class TestHospital:
             hospital = Hospital([0, 2])
 
             hospital._check_patient_exists(1)
+
+    class TestAddNewPatient:
+
+        def test_add_new_patient(self):
+            hospital = Hospital(patients=[1, 2], statuses={1: "Слабое состояние", 2: "Стабильное состояние"})
+
+            hospital.add_new_patient('Слабое состояние')
+
+            assert hospital._patients == [1, 2, 1]
