@@ -59,3 +59,8 @@ class ActionsForCommands:
         statistic = self._hospital.get_statistics_patients_statuses()
         total_patients = self._hospital.get_total_number_patients()
         self._input_output_manager.send_message_hospital_statistics_text(statistic, total_patients)
+
+    def add_new_patient(self):
+        status = self._input_output_manager.get_new_patient_status()
+        self._hospital.add_new_patient(status)
+        self._input_output_manager.send_message_patient_added(status)

@@ -234,8 +234,9 @@ class TestActionsForCommands:
             input_output_manager = MagicMock()
             hospital = Hospital([1, 2, 3])
             actions_for_commands = ActionsForCommands(input_output_manager, hospital)
+            input_output_manager.get_new_patient_status.return_value = "Готов к выписке"
 
-            actions_for_commands.add_new_patient('Готов к выписке')
+            actions_for_commands.add_new_patient()
 
             assert hospital._patients == [1, 2, 3, 3]
-            input_output_manager.send_message_new_status.assert_called_once_with('Готов к выписке')
+            input_output_manager.send_message_patient_added.assert_called_once_with("Готов к выписке")
