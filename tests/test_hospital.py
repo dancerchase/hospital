@@ -7,9 +7,9 @@ class TestHospital:
     class TestGetPatientStatus:
 
         def test_get_patient_status(self):
-            hospital = Hospital([2, 0])
+            hospital = Hospital(patients=[2, 0], statuses={0: "Стабильное состояние", 2: "Готов к выписке"})
 
-            assert hospital.get_patient_status(1) == "Слегка болен"
+            assert hospital.get_patient_status(1) == "Готов к выписке"
 
         def test_get_status_patient_id_not_exists(self):
             hospital = Hospital([1, 1, 1])
@@ -28,34 +28,34 @@ class TestHospital:
 
         def test_patient_other_statuses(self):
             hospital = Hospital(
-                statuses={-1: "Тяжелое состояние",
-                          0: "Состояние средней тяжести",
+                statuses={0: "Состояние средней тяжести",
                           1: "Слабое состояние",
                           2: "Стабильное состояние",
                           3: "Готов к выписке"})
 
-            assert hospital._statuses == {-1: "Тяжелое состояние",
-                                            0: "Состояние средней тяжести",
-                                            1: "Слабое состояние",
-                                            2: "Стабильное состояние",
-                                            3: "Готов к выписке"}
+            assert hospital._statuses == {0: "Состояние средней тяжести",
+                                          1: "Слабое состояние",
+                                          2: "Стабильное состояние",
+                                          3: "Готов к выписке"}
 
     class TestDownStatusForPatient:
 
         def test_down_status_for_patient(self):
-            hospital = Hospital([3, 0])
+            hospital = Hospital(patients=[5, 0],
+                                statuses={0: "Состояние средней тяжести", 4: "Готов к выписке", 5: "Слабое состояние"})
 
             hospital.down_status_for_patient(1)
 
-            assert hospital._patients == [2, 0]
+            assert hospital._patients == [4, 0]
 
         def test_down_status_for_patient_minimum_status(self):
-            hospital = Hospital([3, 0])
+            hospital = Hospital(patients=[3, 4],
+                                statuses={4: "Готов к выписке", 3: "Состояние средней тяжести"})
 
             with pytest.raises(AttemptLowerMinimumStatusError):
-                hospital.down_status_for_patient(2)
+                hospital.down_status_for_patient(1)
 
-            assert hospital._patients == [3, 0]
+            assert hospital._patients == [3, 4]
 
         def test_down_status_for_patient_id_not_exists(self):
             hospital = Hospital([1, 1, 1])
@@ -72,19 +72,20 @@ class TestHospital:
     class TestUpStatusForPatient:
 
         def test_up_status_for_patient(self):
-            hospital = Hospital([3, 0])
+            hospital = Hospital(patients=[3, 0],
+                                statuses={0: "Состояние средней тяжести", 1: "Слабое состояние", 3: "Готов к выписке"})
 
             hospital.up_status_for_patient(2)
 
             assert hospital._patients == [3, 1]
 
         def test_up_status_for_patient_maximum_status(self):
-            hospital = Hospital([3, 0])
+            hospital = Hospital(patients=[5, 0], statuses={0: "Состояние средней тяжести", 5: "Готов к выписке"})
 
             with pytest.raises(AttemptUpperMaximumStatusError):
                 hospital.up_status_for_patient(1)
 
-            assert hospital._patients == [3, 0]
+            assert hospital._patients == [5, 0]
 
         def test_up_status_for_patient_id_not_exists(self):
             hospital = Hospital([1, 2])
@@ -101,12 +102,14 @@ class TestHospital:
     class TestIsPossibleToUpPatientStatus:
 
         def test_is_possible_to_up_patient_status(self):
-            hospital = Hospital([3, 1])
+            hospital = Hospital(patients=[5, 1],
+                                statuses={1: "Слабое состояние", 2: "Стабильное состояние", 5: "Готов к выписке"})
 
             assert hospital.is_possible_to_up_patient_status(2)
 
         def test_is_not_possible_to_up_patient_status(self):
-            hospital = Hospital([3, 1])
+            hospital = Hospital(patients=[5, 1],
+                                statuses={1: "Слабое состояние", 2: "Стабильное состояние", 5: "Готов к выписке"})
 
             assert not hospital.is_possible_to_up_patient_status(1)
 
