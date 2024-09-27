@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import MagicMock, call
 from hospital import Hospital
 from actions_for_commands import ActionsForCommands
@@ -5,13 +6,15 @@ from input_output.input_output_manager import InputOutputManager
 from application import Application
 from input_output.mock_console import MockConsole
 
+base_statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+
 
 class TestApplication:
 
     def test_first_base_scenario(self):
         console = MagicMock()
         input_output_manager = InputOutputManager(console)
-        hospital = Hospital([1, 1, 1, 1, 1])
+        hospital = Hospital(patients=[1, 1, 1, 1, 1], statuses=base_statuses)
         actions_for_commands = ActionsForCommands(input_output_manager, hospital)
         application = Application(input_output_manager, actions_for_commands)
         console.input.side_effect = [
@@ -55,7 +58,7 @@ class TestApplication:
     def test_invalid_command(self):
         console = MagicMock()
         input_output_manager = InputOutputManager(console)
-        hospital = Hospital()
+        hospital = Hospital(statuses=base_statuses)
         actions_for_commands = ActionsForCommands(input_output_manager, hospital)
         application = Application(input_output_manager, actions_for_commands)
         console.input.side_effect = [
@@ -72,7 +75,7 @@ class TestApplication:
         ])
 
     def test_ordinary_positive_scenario(self):
-        hospital = Hospital([1, 1, 0, 2, 1])
+        hospital = Hospital(patients=[1, 1, 0, 2, 1], statuses=base_statuses)
         console = MockConsole()
         actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
         application = Application(InputOutputManager(console), actions_for_commands)
@@ -104,7 +107,7 @@ class TestApplication:
         assert hospital._patients == [2, 0, 0, 2, 1]
 
     def test_unknown_command(self):
-        hospital = Hospital([1, 1, 0, 2, 1])
+        hospital = Hospital(patients=[1, 1, 0, 2, 1], statuses=base_statuses)
         console = MockConsole()
         actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
         application = Application(InputOutputManager(console), actions_for_commands)
@@ -121,7 +124,7 @@ class TestApplication:
 
 
 def test_boundary_cases():
-    hospital = Hospital([0, 3, 3, 1])
+    hospital = Hospital(patients=[0, 3, 3, 1], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -150,7 +153,7 @@ def test_boundary_cases():
 
 
 def test_cases_of_invalid_data_entry():
-    hospital = Hospital([1, 1])
+    hospital = Hospital(patients=[1, 1], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -172,7 +175,7 @@ def test_cases_of_invalid_data_entry():
 
 
 def test_discharge_patient():
-    hospital = Hospital([1, 3, 1])
+    hospital = Hospital(patients=[1, 3, 1], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -191,7 +194,7 @@ def test_discharge_patient():
 
 
 def test_add_new_patient():
-    hospital = Hospital([1, 3, 2])
+    hospital = Hospital(patients=[1, 3, None], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -210,11 +213,11 @@ def test_add_new_patient():
     application.run_application()
 
     console.verify_all_calls_have_been_made()
-    assert hospital._patients == [1, 3, 2, 1]
+    assert hospital._patients == [1, 3, None, 1]
 
 
 def test_add_new_patient_with_invalid_status():
-    hospital = Hospital([1, 3, 2])
+    hospital = Hospital(patients=[], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -232,16 +235,16 @@ def test_add_new_patient_with_invalid_status():
 
 
 def test_scenario_with_customs_statuses_and_adding_new_patient():
-    hospital = Hospital(patients=[1, 2, 3],
-                        statuses={1: "Состояние средней тяжести",
-                                  2: "Слабое состояние",
-                                  3: "Стабильное состояние", })
+    statuses = {-1: "Тяжелое состояние",
+                0: "Среднее состояние",
+                1: "Стабильное состояние", }
+    hospital = Hospital(patients=[-1, 0, 1], statuses=statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'добавить пациента')
-    console.add_expected_request_and_response('Введите статус нового пациента: ', 'Слабое состояние')
+    console.add_expected_request_and_response('Введите статус нового пациента: ', 'Среднее состояние')
     console.add_expected_output_message('Пациент добавлен с ID: 4')
 
     console.add_expected_request_and_response('Введите команду: ', 'выписать пациента')
@@ -250,11 +253,11 @@ def test_scenario_with_customs_statuses_and_adding_new_patient():
 
     console.add_expected_request_and_response('Введите команду: ', 'повысить статус пациента')
     console.add_expected_request_and_response('Введите ID пациента: ', '1')
-    console.add_expected_output_message('Новый статус пациента: "Слабое состояние"')
+    console.add_expected_output_message('Новый статус пациента: "Среднее состояние"')
 
     console.add_expected_request_and_response('Введите команду: ', 'понизить статус пациента')
     console.add_expected_request_and_response('Введите ID пациента: ', '2')
-    console.add_expected_output_message('Новый статус пациента: "Состояние средней тяжести"')
+    console.add_expected_output_message('Новый статус пациента: "Тяжелое состояние"')
 
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
@@ -262,4 +265,4 @@ def test_scenario_with_customs_statuses_and_adding_new_patient():
     application.run_application()
 
     console.verify_all_calls_have_been_made()
-    assert hospital._patients == [2, 1, 3, None]
+    assert hospital._patients == [0, -1, 1, None]

@@ -54,16 +54,6 @@ class TestInputOutputManager:
             assert input_output_manager.get_command_from_user() == 'узнать статус пациента'
             console.input.assert_called_once_with('Введите команду: ')
 
-    class TestAddNewPatient:
-
-        def test_add_new_patient(self):
-            console = MagicMock()
-            input_output_manager = InputOutputManager(console)
-            console.input.return_value = 'Слегка болен'
-
-            assert input_output_manager.get_new_patient_status() == 'Слегка болен'
-            console.input.assert_called_once_with('Введите статус нового пациента: ')
-
     class TestConvertPatientIdFromStrToPositiveInt:
 
         def test_convert_patient_id_from_str_to_positive_int(self):
@@ -154,3 +144,13 @@ class TestInputOutputManager:
             input_output_manager.send_message_patient_added(5)
 
             console.print.assert_called_once_with(f'Пациент добавлен с ID: 5')
+
+    class TestAddNewPatient:
+
+        def test_add_new_patient(self):
+            console = MagicMock()
+            input_output_manager = InputOutputManager(console)
+            console.input.return_value = 'Слегка болен'
+
+            assert input_output_manager.get_new_patient_status() == 'Слегка болен'
+            console.input.assert_called_once_with('Введите статус нового пациента: ')

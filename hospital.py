@@ -5,16 +5,13 @@ from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, Atte
 class Hospital:
     """Основная бизнес-логика работы приложения"""
 
-    def __init__(self, patients=None, statuses=None):
+    def __init__(self, statuses, patients=None, ):
+        self._statuses = statuses
+
         if patients:
             self._patients = patients
         else:
             self._patients = [1 for _ in range(200)]
-
-        if statuses:
-            self._statuses = statuses
-        else:
-            self._statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
     def get_patient_status(self, patient_id: int) -> str:
         self._check_patient_exists(patient_id)
@@ -31,19 +28,29 @@ class Hospital:
 
     def up_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == self._max_status_number():
+        if not self.is_possible_to_up_patient_status(patient_id):
             raise AttemptUpperMaximumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] += 1
 
     def is_possible_to_up_patient_status(self, patient_id: int) -> bool:
         self._check_patient_exists(patient_id)
-        return self._get_patient_status_number(patient_id) < self._max_status_number()
+        return self._get_patient_status_number(patient_id) < self._get_maximum_status_number()
+
+    def is_possible_to_down_patient_status(self, patient_id: int) -> bool:
+        self._check_patient_exists(patient_id)
+        return self._get_patient_status_number(patient_id) > self._get_minimum_status_number()
 
     def down_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == self._min_status_number():
+        if not self.is_possible_to_down_patient_status(patient_id):
             raise AttemptLowerMinimumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
+
+    def _get_maximum_status_number(self) -> int:
+        return max(self._statuses.keys())
+
+    def _get_minimum_status_number(self) -> int:
+        return min(self._statuses.keys())
 
     def patient_discharge(self, patient_id: int):
         self._check_patient_exists(patient_id)
@@ -65,14 +72,8 @@ class Hospital:
         if patient_id > len(self._patients) or self._patients[self._convert_patient_id_to_index(patient_id)] is None:
             raise PatientIDNotExistsError
 
-    def _max_status_number(self) -> int:
-        return max(self._statuses.keys())
-
-    def _min_status_number(self) -> int:
-        return min(self._statuses.keys())
-
     def add_new_patient(self, status: str):
-        self._check_status_exist(status)
+        self._check_status_exists(status)
         status_number = self._get_number_status(status)
         self._patients.append(status_number)
         return self._patients.index(status_number, -1) + 1
@@ -82,6 +83,6 @@ class Hospital:
             if value == status:
                 return key
 
-    def _check_status_exist(self, status: str):
+    def _check_status_exists(self, status: str):
         if status not in self._statuses.values():
             raise PatientStatusNotExistsError
