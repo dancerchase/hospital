@@ -27,6 +27,9 @@ class Application:
             self._is_command_not_stop = False
             self._input_output_manager.send_message_application_stop()
 
+        elif command in ['добавить пациента', 'add patient']:
+            self._actions_for_commands.add_new_patient()
+
         else:
             self._input_output_manager.send_message_command_not_exist_error()
 
