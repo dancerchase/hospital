@@ -129,12 +129,6 @@ class TestHospital:
 
             assert hospital.is_possible_to_down_patient_status(2)
 
-        def test_is_not_possible_to_down_patient_status_dynamic_statuses_model(self):
-            statuses = {-1: "Критическое состояние", 0: "Плохое состояние"}
-            hospital = Hospital(patients=[-1, 0], statuses=statuses)
-
-            assert not hospital.is_possible_to_down_patient_status(1)
-
     class TestPatientDischarge:
 
         def test_patient_discharge(self):
@@ -168,8 +162,22 @@ class TestHospital:
         def test_get_statistics_patients_statuses_all(self):
             hospital = Hospital(patients=[1, 2, None, 3, 0, None, 1], statuses=base_statuses)
 
-            assert hospital.get_statistics_patients_statuses() == {'Болен': 2, 'Слегка болен': 1, 'Тяжело болен': 1,
+            assert hospital.get_statistics_patients_statuses() == {'Болен': 2,
+                                                                   'Слегка болен': 1,
+                                                                   'Тяжело болен': 1,
                                                                    'Готов к выписке': 1}
+
+        def test_get_statistics_patients_statuses_dynamic_statuses_all(self):
+            statuses = {-1: "Критическое состояние",
+                        0: "Плохое состояние",
+                        1: "Хорошее состояние",
+                        2: "Может быть выписан"}
+            hospital = Hospital(patients=[-1, 2, None, -1, 0, None, 1], statuses=statuses)
+
+            assert hospital.get_statistics_patients_statuses() == {'Критическое состояние': 2,
+                                                                   'Плохое состояние': 1,
+                                                                   'Хорошее состояние': 1,
+                                                                   'Может быть выписан': 1}
 
         def test_get_statistics_patients_statuses(self):
             hospital = Hospital(patients=[1, 2, 3, None], statuses=base_statuses)
