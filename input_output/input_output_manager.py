@@ -55,3 +55,6 @@ class InputOutputManager:
 
     def get_new_patient_status(self):
         return self._console.input('Введите статус нового пациента: ')
+
+    def send_message_patient_added(self, patient_id: int):
+        self._console.print(f'Пациент добавлен с ID: {patient_id}')
