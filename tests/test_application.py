@@ -6,13 +6,15 @@ from input_output.input_output_manager import InputOutputManager
 from application import Application
 from input_output.mock_console import MockConsole
 
+base_statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+
 
 class TestApplication:
 
     def test_first_base_scenario(self):
         console = MagicMock()
         input_output_manager = InputOutputManager(console)
-        hospital = Hospital([1, 1, 1, 1, 1])
+        hospital = Hospital(patients=[1, 1, 1, 1, 1], statuses=base_statuses)
         actions_for_commands = ActionsForCommands(input_output_manager, hospital)
         application = Application(input_output_manager, actions_for_commands)
         console.input.side_effect = [
@@ -56,7 +58,7 @@ class TestApplication:
     def test_invalid_command(self):
         console = MagicMock()
         input_output_manager = InputOutputManager(console)
-        hospital = Hospital()
+        hospital = Hospital(statuses=base_statuses)
         actions_for_commands = ActionsForCommands(input_output_manager, hospital)
         application = Application(input_output_manager, actions_for_commands)
         console.input.side_effect = [
@@ -73,7 +75,7 @@ class TestApplication:
         ])
 
     def test_ordinary_positive_scenario(self):
-        hospital = Hospital([1, 1, 0, 2, 1])
+        hospital = Hospital(patients=[1, 1, 0, 2, 1], statuses=base_statuses)
         console = MockConsole()
         actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
         application = Application(InputOutputManager(console), actions_for_commands)
@@ -105,7 +107,7 @@ class TestApplication:
         assert hospital._patients == [2, 0, 0, 2, 1]
 
     def test_unknown_command(self):
-        hospital = Hospital([1, 1, 0, 2, 1])
+        hospital = Hospital(patients=[1, 1, 0, 2, 1], statuses=base_statuses)
         console = MockConsole()
         actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
         application = Application(InputOutputManager(console), actions_for_commands)
@@ -122,7 +124,7 @@ class TestApplication:
 
 
 def test_boundary_cases():
-    hospital = Hospital([0, 3, 3, 1])
+    hospital = Hospital(patients=[0, 3, 3, 1], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -151,7 +153,7 @@ def test_boundary_cases():
 
 
 def test_cases_of_invalid_data_entry():
-    hospital = Hospital([1, 1])
+    hospital = Hospital(patients=[1, 1], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
@@ -173,7 +175,7 @@ def test_cases_of_invalid_data_entry():
 
 
 def test_discharge_patient():
-    hospital = Hospital([1, 3, 1])
+    hospital = Hospital(patients=[1, 3, 1], statuses=base_statuses)
     console = MockConsole()
     actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
     application = Application(InputOutputManager(console), actions_for_commands)
