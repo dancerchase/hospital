@@ -111,6 +111,19 @@ class TestHospital:
 
             assert not hospital.is_possible_to_up_patient_status(2)
 
+    class TestIsPossibleToDownPatientStatus:
+
+        def test_is_possible_to_down_patient_status(self):
+            hospital = Hospital(patients=[3, 0], statuses=base_statuses)
+
+            assert hospital.is_possible_to_down_patient_status(1)
+
+        def test_is_possible_to_down_patient_status_dynamic_statuses_model(self):
+            statuses = {-1: "Критическое состояние", 0: "Плохое состояние"}
+            hospital = Hospital(patients=[-1, 0], statuses=statuses)
+
+            assert hospital.is_possible_to_down_patient_status(2)
+
     class TestPatientDischarge:
 
         def test_patient_discharge(self):
