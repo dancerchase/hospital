@@ -230,3 +230,15 @@ class TestHospital:
                     hospital.add_new_patient('Инвалидный статус')
 
                 assert hospital._patients == [1, 2]
+
+    class TestCheckStatusExists:
+
+        def test_check_status_exists(self):
+            hospital = Hospital(patients=[], statuses=base_statuses)
+            hospital._check_status_exists('Готов к выписке')
+
+        def test_check_status_not_exists(self):
+            hospital = Hospital(patients=[], statuses=base_statuses)
+
+            with pytest.raises(PatientStatusNotExistsError):
+                hospital._check_status_exists('несуществующий статус')
