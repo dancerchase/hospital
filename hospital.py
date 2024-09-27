@@ -35,6 +35,11 @@ class Hospital:
         self._check_patient_exists(patient_id)
         return self._get_patient_status_number(patient_id) < self._get_maximum_status_number()
 
+    def is_possible_to_down_patient_status(self, patient_id: int) -> bool:
+        self._check_patient_exists(patient_id)
+        return self._get_patient_status_number(patient_id) > self._get_minimum_status_number()
+
+
     def down_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
         if self._get_patient_status_number(patient_id) == 0:
@@ -43,6 +48,9 @@ class Hospital:
 
     def _get_maximum_status_number(self) -> int:
         return max(self._statuses.keys())
+
+    def _get_minimum_status_number(self) -> int:
+        return min(self._statuses.keys())
 
     def patient_discharge(self, patient_id: int):
         self._check_patient_exists(patient_id)
