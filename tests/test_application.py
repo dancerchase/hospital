@@ -232,3 +232,37 @@ def test_add_new_patient_with_invalid_status():
     application.run_application()
 
     console.verify_all_calls_have_been_made()
+
+
+def test_scenario_with_customs_statuses_and_adding_new_patient():
+    statuses = {-1: "Тяжелое состояние",
+                0: "Среднее состояние",
+                1: "Стабильное состояние", }
+    hospital = Hospital(patients=[-1, 0, 1], statuses=statuses)
+    console = MockConsole()
+    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
+    application = Application(InputOutputManager(console), actions_for_commands)
+
+    console.add_expected_request_and_response('Введите команду: ', 'добавить пациента')
+    console.add_expected_request_and_response('Введите статус нового пациента: ', 'Среднее состояние')
+    console.add_expected_output_message('Пациент добавлен с ID: 4')
+
+    console.add_expected_request_and_response('Введите команду: ', 'выписать пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '4')
+    console.add_expected_output_message('Пациент выписан из больницы')
+
+    console.add_expected_request_and_response('Введите команду: ', 'повысить статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '1')
+    console.add_expected_output_message('Новый статус пациента: "Среднее состояние"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'понизить статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '2')
+    console.add_expected_output_message('Новый статус пациента: "Тяжелое состояние"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'стоп')
+    console.add_expected_output_message('Сеанс завершён.')
+
+    application.run_application()
+
+    console.verify_all_calls_have_been_made()
+    assert hospital._patients == [0, -1, 1, None]
