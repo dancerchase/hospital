@@ -191,3 +191,26 @@ def test_discharge_patient():
 
     console.verify_all_calls_have_been_made()
     assert hospital._patients == [1, None, 1]
+
+
+def test_add_new_patient():
+    hospital = Hospital(patients=[1, 3, None], statuses=base_statuses)
+    console = MockConsole()
+    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
+    application = Application(InputOutputManager(console), actions_for_commands)
+
+    console.add_expected_request_and_response('Введите команду: ', 'добавить пациента')
+    console.add_expected_request_and_response('Введите статус нового пациента: ', 'Болен')
+    console.add_expected_output_message('Пациент добавлен с ID: 4')
+
+    console.add_expected_request_and_response('Введите команду: ', 'узнать статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '4')
+    console.add_expected_output_message('Статус пациента: "Болен"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'стоп')
+    console.add_expected_output_message('Сеанс завершён.')
+
+    application.run_application()
+
+    console.verify_all_calls_have_been_made()
+    assert hospital._patients == [1, 3, None, 1]
