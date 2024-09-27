@@ -229,6 +229,7 @@ class TestActionsForCommands:
 
             input_output_manager.send_message_hospital_statistics_text.assert_called_once_with(
                 {'Готов к выписке': 2, 'Тяжело болен': 1, 'Слегка болен': 1}, 4)
+
     class TestAddNewPatient:
         def test_add_new_patient(self):
             input_output_manager = MagicMock()
