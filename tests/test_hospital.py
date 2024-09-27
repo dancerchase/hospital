@@ -98,13 +98,13 @@ class TestHospital:
 
         def test_is_possible_to_up_patient_status_dynamic_statuses_model(self):
             statuses = {4: "Хорошее состояние", 5: "Может быть выписан"}
-            hospital = Hospital([4, 5], statuses)
+            hospital = Hospital(patients=[4, 5], statuses=statuses)
 
             assert hospital.is_possible_to_up_patient_status(1)
 
         def test_is_not_possible_to_up_patient_status_dynamic_statuses_model(self):
             statuses = {4: "Хорошее состояние", 5: "Может быть выписан"}
-            hospital = Hospital([4, 5], statuses)
+            hospital = Hospital(patients=[4, 5], statuses=statuses)
 
             assert not hospital.is_possible_to_up_patient_status(2)
 
