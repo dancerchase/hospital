@@ -1,7 +1,8 @@
 from unittest.mock import MagicMock
 from hospital import Hospital
 from actions_for_commands import ActionsForCommands
-from errors import PatientIDNotIntOrNegativeError, PatientIDNotExistsError, AttemptLowerMinimumStatusError
+from errors import PatientIDNotIntOrNegativeError, PatientIDNotExistsError, AttemptLowerMinimumStatusError, \
+    PatientStatusNotExistsError
 
 base_statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
@@ -240,3 +241,14 @@ class TestActionsForCommands:
 
             assert hospital._patients == [1, 2, None, 3]
             input_output_manager.send_message_patient_added.assert_called_once_with(4)
+
+        def test_add_new_patient_status_not_exists(self):
+            input_output_manager = MagicMock()
+            input_output_manager.get_new_patient_status.return_value = "несуществующий статус"
+            hospital = Hospital(patients=[], statuses=base_statuses)
+            actions_for_commands = ActionsForCommands(input_output_manager, hospital)
+
+            actions_for_commands.add_new_patient()
+
+            input_output_manager.send_message_with_received_text.assert_called_once_with(
+                str(PatientStatusNotExistsError()))
