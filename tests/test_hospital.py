@@ -182,7 +182,18 @@ class TestHospital:
         def test_get_statistics_patients_statuses(self):
             hospital = Hospital(patients=[1, 2, 3, None], statuses=base_statuses)
 
-            assert hospital.get_statistics_patients_statuses() == {'Болен': 1, 'Слегка болен': 1, 'Готов к выписке': 1}
+            assert hospital.get_statistics_patients_statuses() == {'Болен': 1,
+                                                                   'Слегка болен': 1,
+                                                                   'Готов к выписке': 1}
+
+        def test_get_statistics_patients_statuses_dynamic_statuses(self):
+            statuses = {-1: "Критическое состояние",
+                        0: "Плохое состояние",
+                        1: "Хорошее состояние",
+                        2: "Может быть выписан"}
+            hospital = Hospital(patients=[-1, 0, None, 0], statuses=statuses)
+
+            assert hospital.get_statistics_patients_statuses() == {'Критическое состояние': 1, 'Плохое состояние': 2}
 
     class TestCheckPatientExists:
 
