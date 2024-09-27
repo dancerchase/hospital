@@ -137,6 +137,14 @@ class TestInputOutputManager:
 
             console.print.assert_called_once_with('Текст ошибки')
 
+        def test_send_message_patient_add(self):
+            console = MagicMock()
+            input_output_manager = InputOutputManager(console)
+
+            input_output_manager.send_message_patient_added(5)
+
+            console.print.assert_called_once_with(f'Пациент добавлен с ID: 5')
+
     class TestAddNewPatient:
 
         def test_add_new_patient(self):
