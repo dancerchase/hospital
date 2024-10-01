@@ -123,6 +123,12 @@ class TestHospital:
 
             assert hospital.is_possible_to_up_patient_status(1)
 
+    class TestIsPossibleToDownPatientStatus:
+        def test_is_possible_to_down_patient_status(self):
+            hospital = Hospital(patients=[3, 2], statuses=base_statuses)
+
+            assert hospital._is_possible_to_down_patient_status(2)
+
     class TestPatientDischarge:
 
         def test_patient_discharge(self):
