@@ -37,12 +37,15 @@ class Hospital:
 
     def down_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == 0:
+        if self._get_patient_status_number(patient_id) == self._get_minimum_status_number():
             raise AttemptLowerMinimumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
 
     def _get_maximum_status_number(self) -> int:
         return max(self._statuses.keys())
+
+    def _get_minimum_status_number(self) -> int:
+        return min(self._statuses.keys())
 
     def patient_discharge(self, patient_id: int):
         self._check_patient_exists(patient_id)
