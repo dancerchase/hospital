@@ -58,14 +58,9 @@ class Hospital:
     def get_statistics_patients_statuses(self) -> dict[str, int]:
         patient_statistic = dict()
         for i in self._patients:
-            if i == 0:
-                patient_statistic['Тяжело болен'] = patient_statistic.get('Тяжело болен', 0) + 1
-            elif i == 1:
-                patient_statistic['Болен'] = patient_statistic.get('Болен', 0) + 1
-            elif i == 2:
-                patient_statistic['Слегка болен'] = patient_statistic.get('Слегка болен', 0) + 1
-            elif i == 3:
-                patient_statistic['Готов к выписке'] = patient_statistic.get('Готов к выписке', 0) + 1
+            if i is not None:
+                status = self._statuses[i]
+                patient_statistic[status] = patient_statistic.get(status, 0) + 1
 
         return patient_statistic
 
