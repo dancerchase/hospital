@@ -204,3 +204,11 @@ class TestHospital:
             hospital = Hospital(patients=[1, 2, 3], statuses=base_statuses)
 
             hospital._check_patient_exists(1)
+
+    def test_add_new_patient(self):
+        hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
+
+        patient_id = hospital.add_new_patient('Готов к выписке')
+
+        assert patient_id == 4
+        assert hospital._patients == [1, 2, None, 3]
