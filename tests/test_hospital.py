@@ -58,6 +58,14 @@ class TestHospital:
             with pytest.raises(PatientIDNotExistsError):
                 hospital.down_status_for_patient(2)
 
+        def test_down_status_for_patient_with_other_statuses(self):
+            statuses = {-1: 'Критическое состояние', 0: "Тяжело болен", 1: 'Среднее состояние'}
+            hospital = Hospital(patients=[-1, 0, 1], statuses=statuses)
+
+            hospital.down_status_for_patient(2)
+
+            assert hospital._patients == [-1, -1, 1]
+
     class TestUpStatusForPatient:
 
         def test_up_status_for_patient(self):
