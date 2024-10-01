@@ -96,6 +96,13 @@ class TestHospital:
 
             assert not hospital.is_possible_to_up_patient_status(1)
 
+        def test_is_possible_to_up_patient_status_with_other_statuses_model(self):
+            statuses = {1: 'Критическое состояние', 2: "Тяжело болен", 3: 'Среднее состояние', 4: "Хорошее состояние",
+                        5: "Может быть выписан"}
+            hospital = Hospital(patients=[4, 5], statuses=statuses)
+
+            assert hospital.is_possible_to_up_patient_status(1)
+
     class TestPatientDischarge:
 
         def test_patient_discharge(self):
