@@ -52,3 +52,6 @@ class InputOutputManager:
 
     def send_message_with_received_text(self, text: str):
         self._console.print(text)
+
+    def get_patient_status(self) -> str:
+        return self._console.input('Введите статус нового пациента: ')
