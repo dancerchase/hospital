@@ -70,3 +70,13 @@ class Hospital:
     def _check_patient_exists(self, patient_id: int):
         if patient_id > len(self._patients) or self._patients[self._convert_patient_id_to_index(patient_id)] is None:
             raise PatientIDNotExistsError
+
+    def add_new_patient(self, status: str):
+        status_number = self._get_number_status(status)
+        self._patients.append(status_number)
+        return self._patients.index(status_number, -1) + 1
+
+    def _get_number_status(self, status: str) -> int:
+        for key, value in self._statuses.items():
+            if value == status:
+                return key
