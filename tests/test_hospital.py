@@ -174,6 +174,18 @@ class TestHospital:
                                                                    'Слегка болен': 1,
                                                                    'Готов к выписке': 1}
 
+        def test_get_statistics_patients_statuses_with_other_statuses(self):
+            statuses = {-1: "Критическое состояние",
+                        0: "Плохое состояние",
+                        1: "Хорошее состояние",
+                        2: "Может быть выписан"}
+            hospital = Hospital(patients=[-1, 2, None, 1, 0, None, 1], statuses=statuses)
+
+            assert hospital.get_statistics_patients_statuses() == {'Критическое состояние': 1,
+                                                                   'Плохое состояние': 1,
+                                                                   'Хорошее состояние': 2,
+                                                                   'Может быть выписан': 1}
+
     class TestCheckPatientExists:
 
         def test_patient_id_not_in_patient_list(self):
