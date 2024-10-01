@@ -41,7 +41,7 @@ class Hospital:
 
     def down_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == self._get_minimum_status_number():
+        if not self._is_possible_to_down_patient_status(patient_id):
             raise AttemptLowerMinimumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
 
