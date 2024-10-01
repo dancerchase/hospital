@@ -76,3 +76,12 @@ def test_not_verify_all_calls_have_been_made_2():
 
     with pytest.raises(AssertionError):
         console.verify_all_calls_have_been_made()
+
+
+def test_input_two_commands():
+    console = MockConsole()
+    console.add_expected_request_and_response('Введите команду: ', 'узнать статус пациента')
+    console.add_expected_request_and_response('Введите команду: ', 'узнать статус пациента')
+
+    assert console.input('Введите команду: ') == 'узнать статус пациента'
+    assert console.input('Введите команду: ') == 'узнать статус пациента'
