@@ -27,7 +27,7 @@ class Hospital:
 
     def up_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
-        if self._get_patient_status_number(patient_id) == 3:
+        if not self.is_possible_to_up_patient_status(patient_id):
             raise AttemptUpperMaximumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] += 1
 
