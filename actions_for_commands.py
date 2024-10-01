@@ -1,4 +1,5 @@
-from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, PatientIDNotIntOrNegativeError
+from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, PatientIDNotIntOrNegativeError, \
+    PatientStatusNotExistsError
 
 
 class ActionsForCommands:
@@ -61,6 +62,10 @@ class ActionsForCommands:
         self._input_output_manager.send_message_hospital_statistics_text(statistic, total_patients)
 
     def add_new_patient(self):
-        status = self._input_output_manager.get_patient_status()
-        new_patient_id = self._hospital.add_new_patient(status)
-        self._input_output_manager.send_message_patient_added(new_patient_id)
+        try:
+            status = self._input_output_manager.get_patient_status()
+            new_patient_id = self._hospital.add_new_patient(status)
+            self._input_output_manager.send_message_patient_added(new_patient_id)
+
+        except PatientStatusNotExistsError as error:
+            self._input_output_manager.send_message_with_received_text(str(error))
