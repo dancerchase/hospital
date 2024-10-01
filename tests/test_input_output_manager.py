@@ -136,3 +136,13 @@ class TestInputOutputManager:
             input_output_manager.send_message_with_received_text('Текст ошибки')
 
             console.print.assert_called_once_with('Текст ошибки')
+
+    class TestGetPatientStatus:
+
+        def test_get_patient_status(self):
+            console = MagicMock()
+            input_output_manager = InputOutputManager(console)
+            console.input.return_value = 'Слегка болен'
+
+            assert input_output_manager.get_patient_status() == 'Слегка болен'
+            console.input.assert_called_once_with('Введите статус нового пациента: ')
