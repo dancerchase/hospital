@@ -179,44 +179,46 @@ class TestHospital:
             statuses = {-1: "Критическое состояние",
                         0: "Плохое состояние",
                         1: "Хорошее состояние",
-                        2: "Может быть выписан"}
-            hospital = Hospital(patients=[-1, 2, None, 1, 0, None, 1], statuses=statuses)
+                        2: "Может быть выписан",
+                        3: "В стадии оформления на выписку"}
+            hospital = Hospital(patients=[3, -1, 2, None, 1, 0, None, 1], statuses=statuses)
 
-            assert hospital.get_statistics_patients_statuses() == {'Критическое состояние': 1,
+            assert hospital.get_statistics_patients_statuses() == {"В стадии оформления на выписку": 1,
+                                                                   'Критическое состояние': 1,
                                                                    'Плохое состояние': 1,
                                                                    'Хорошее состояние': 2,
                                                                    'Может быть выписан': 1}
 
-    class TestCheckPatientExists:
+        class TestCheckPatientExists:
 
-        def test_patient_id_not_in_patient_list(self):
-            hospital = Hospital(patients=[1, 2, 3], statuses=base_statuses)
+            def test_patient_id_not_in_patient_list(self):
+                hospital = Hospital(patients=[1, 2, 3], statuses=base_statuses)
 
-            with pytest.raises(PatientIDNotExistsError):
-                hospital._check_patient_exists(4)
+                with pytest.raises(PatientIDNotExistsError):
+                    hospital._check_patient_exists(4)
 
-        def test_patient_status_in_patient_list_is_none(self):
-            hospital = Hospital(patients=[None, 2, 3], statuses=base_statuses)
+            def test_patient_status_in_patient_list_is_none(self):
+                hospital = Hospital(patients=[None, 2, 3], statuses=base_statuses)
 
-            with pytest.raises(PatientIDNotExistsError):
+                with pytest.raises(PatientIDNotExistsError):
+                    hospital._check_patient_exists(1)
+
+            def test_if_patient_exists_error_not_raised(self):
+                hospital = Hospital(patients=[1, 2, 3], statuses=base_statuses)
+
                 hospital._check_patient_exists(1)
 
-        def test_if_patient_exists_error_not_raised(self):
-            hospital = Hospital(patients=[1, 2, 3], statuses=base_statuses)
+        class TestAddNewPatient:
+            def test_add_new_patient(self):
+                hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
 
-            hospital._check_patient_exists(1)
+                patient_id = hospital.add_new_patient('Готов к выписке')
 
-    class TestAddNewPatient:
-        def test_add_new_patient(self):
-            hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
+                assert patient_id == 4
+                assert hospital._patients == [1, 2, None, 3]
 
-            patient_id = hospital.add_new_patient('Готов к выписке')
+            def test_add_new_patient_status_not_exists(self):
+                hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
 
-            assert patient_id == 4
-            assert hospital._patients == [1, 2, None, 3]
-
-        def test_add_new_patient_status_not_exists(self):
-            hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
-
-            with pytest.raises(PatientStatusNotExistsError):
-                hospital.add_new_patient('несуществующий статус')
+                with pytest.raises(PatientStatusNotExistsError):
+                    hospital.add_new_patient('несуществующий статус')
