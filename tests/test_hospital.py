@@ -205,10 +205,17 @@ class TestHospital:
 
             hospital._check_patient_exists(1)
 
-    def test_add_new_patient(self):
-        hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
+    class TestAddNewPatient:
+        def test_add_new_patient(self):
+            hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
 
-        patient_id = hospital.add_new_patient('Готов к выписке')
+            patient_id = hospital.add_new_patient('Готов к выписке')
 
-        assert patient_id == 4
-        assert hospital._patients == [1, 2, None, 3]
+            assert patient_id == 4
+            assert hospital._patients == [1, 2, None, 3]
+
+        def test_add_new_patient_status_not_exists(self):
+            hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
+
+            with pytest.raises(PatientStatusNotExistsError):
+                hospital.add_new_patient('несуществующий статус')
