@@ -229,6 +229,10 @@ def test_add_new_patient():
     console.add_expected_request_and_response('Введите статус нового пациента: ', 'Готов к выписке')
     console.add_expected_output_message('Пациент добавлен с ID: 4')
 
+    console.add_expected_request_and_response('Введите команду: ', 'узнать статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '4')
+    console.add_expected_output_message('Статус пациента: "Готов к выписке"')
+
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
