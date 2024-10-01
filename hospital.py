@@ -4,13 +4,13 @@ from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, Atte
 class Hospital:
     """Основная бизнес-логика работы приложения"""
 
-    def __init__(self, patients=None):
+    def __init__(self, statuses, patients=None):
         if patients:
             self._patients = patients
         else:
             self._patients = [1 for _ in range(200)]
 
-        self._statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+        self._statuses = statuses
 
     def get_patient_status(self, patient_id: int) -> str:
         self._check_patient_exists(patient_id)
@@ -33,13 +33,16 @@ class Hospital:
 
     def is_possible_to_up_patient_status(self, patient_id: int) -> bool:
         self._check_patient_exists(patient_id)
-        return self._get_patient_status_number(patient_id) < 3
+        return self._get_patient_status_number(patient_id) < self._get_maximum_status_number()
 
     def down_status_for_patient(self, patient_id: int):
         self._check_patient_exists(patient_id)
         if self._get_patient_status_number(patient_id) == 0:
             raise AttemptLowerMinimumStatusError
         self._patients[self._convert_patient_id_to_index(patient_id)] -= 1
+
+    def _get_maximum_status_number(self) -> int:
+        return max(self._statuses.keys())
 
     def patient_discharge(self, patient_id: int):
         self._check_patient_exists(patient_id)
