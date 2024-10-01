@@ -8,14 +8,18 @@ from input_output.mock_console import MockConsole
 base_statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
 
 
+def make_application(hospital, console):
+    input_output_manager = InputOutputManager(console)
+    actions_for_commands = ActionsForCommands(input_output_manager, hospital)
+    app = Application(input_output_manager, actions_for_commands)
+    return app
+
+
 class TestApplication:
 
     def test_first_base_scenario(self):
         console = MagicMock()
-        input_output_manager = InputOutputManager(console)
         hospital = Hospital(patients=[1, 1, 1, 1, 1], statuses=base_statuses)
-        actions_for_commands = ActionsForCommands(input_output_manager, hospital)
-        application = Application(input_output_manager, actions_for_commands)
         console.input.side_effect = [
             'узнать статус пациента',
             '5',
@@ -28,6 +32,7 @@ class TestApplication:
             'рассчитать статистику',
             'стоп']
 
+        application = make_application(hospital, console)
         application.run_application()
 
         console.assert_has_calls([
@@ -56,14 +61,12 @@ class TestApplication:
 
     def test_invalid_command(self):
         console = MagicMock()
-        input_output_manager = InputOutputManager(console)
         hospital = Hospital(statuses=base_statuses)
-        actions_for_commands = ActionsForCommands(input_output_manager, hospital)
-        application = Application(input_output_manager, actions_for_commands)
         console.input.side_effect = [
             'выписать всех пациентов',
             'стоп']
 
+        application = make_application(hospital, console)
         application.run_application()
 
         console.assert_has_calls([
@@ -76,8 +79,6 @@ class TestApplication:
     def test_ordinary_positive_scenario(self):
         hospital = Hospital(patients=[1, 1, 0, 2, 1], statuses=base_statuses)
         console = MockConsole()
-        actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-        application = Application(InputOutputManager(console), actions_for_commands)
 
         console.add_expected_request_and_response('Введите команду: ', 'узнать статус пациента')
         console.add_expected_request_and_response('Введите ID пациента: ', '1')
@@ -100,6 +101,7 @@ class TestApplication:
         console.add_expected_request_and_response('Введите команду: ', 'стоп')
         console.add_expected_output_message('Сеанс завершён.')
 
+        application = make_application(hospital, console)
         application.run_application()
 
         console.verify_all_calls_have_been_made()
@@ -108,8 +110,6 @@ class TestApplication:
     def test_unknown_command(self):
         hospital = Hospital(patients=[1, 1, 0, 2, 1], statuses=base_statuses)
         console = MockConsole()
-        actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-        application = Application(InputOutputManager(console), actions_for_commands)
 
         console.add_expected_request_and_response('Введите команду: ', 'сделай что-нибудь...')
         console.add_expected_output_message('Неизвестная команда! Попробуйте ещё раз')
@@ -117,6 +117,7 @@ class TestApplication:
         console.add_expected_request_and_response('Введите команду: ', 'стоп')
         console.add_expected_output_message('Сеанс завершён.')
 
+        application = make_application(hospital, console)
         application.run_application()
 
         console.verify_all_calls_have_been_made()
@@ -125,8 +126,6 @@ class TestApplication:
 def test_boundary_cases():
     hospital = Hospital(patients=[0, 3, 3, 1], statuses=base_statuses)
     console = MockConsole()
-    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-    application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'понизить статус пациента')
     console.add_expected_request_and_response('Введите ID пациента: ', '1')
@@ -145,6 +144,7 @@ def test_boundary_cases():
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
+    application = make_application(hospital, console)
     application.run_application()
 
     console.verify_all_calls_have_been_made()
@@ -154,8 +154,6 @@ def test_boundary_cases():
 def test_cases_of_invalid_data_entry():
     hospital = Hospital(patients=[1, 1], statuses=base_statuses)
     console = MockConsole()
-    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-    application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'узнать статус пациента')
     console.add_expected_request_and_response('Введите ID пациента: ', 'два')
@@ -168,6 +166,7 @@ def test_cases_of_invalid_data_entry():
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
+    application = make_application(hospital, console)
     application.run_application()
 
     console.verify_all_calls_have_been_made()
@@ -176,8 +175,6 @@ def test_cases_of_invalid_data_entry():
 def test_discharge_patient():
     hospital = Hospital(patients=[1, 3, 1], statuses=base_statuses)
     console = MockConsole()
-    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-    application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'выписать пациента')
     console.add_expected_request_and_response('Введите ID пациента: ', '2')
@@ -186,6 +183,7 @@ def test_discharge_patient():
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
+    application = make_application(hospital, console)
     application.run_application()
 
     console.verify_all_calls_have_been_made()
@@ -199,8 +197,6 @@ def test_scenario_with_other_statuses_model():
                 2: "Может быть выписан"}
     hospital = Hospital(patients=[-1, 2, None, 1], statuses=statuses)
     console = MockConsole()
-    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-    application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'get status')
     console.add_expected_request_and_response('Введите ID пациента: ', '1')
@@ -218,6 +214,7 @@ def test_scenario_with_other_statuses_model():
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
+    application = make_application(hospital, console)
     application.run_application()
 
     console.verify_all_calls_have_been_made()
@@ -227,8 +224,6 @@ def test_scenario_with_other_statuses_model():
 def test_add_new_patient():
     hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
     console = MockConsole()
-    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-    application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'добавить пациента')
     console.add_expected_request_and_response('Введите статус нового пациента: ', 'Готов к выписке')
@@ -237,6 +232,7 @@ def test_add_new_patient():
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
+    application = make_application(hospital, console)
     application.run_application()
 
     console.verify_all_calls_have_been_made()
@@ -246,8 +242,6 @@ def test_add_new_patient():
 def test_add_new_patient_with_invalid_status():
     hospital = Hospital(patients=[1, 2, None], statuses=base_statuses)
     console = MockConsole()
-    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
-    application = Application(InputOutputManager(console), actions_for_commands)
 
     console.add_expected_request_and_response('Введите команду: ', 'добавить пациента')
     console.add_expected_request_and_response('Введите статус нового пациента: ', 'invalid status')
@@ -256,6 +250,7 @@ def test_add_new_patient_with_invalid_status():
     console.add_expected_request_and_response('Введите команду: ', 'стоп')
     console.add_expected_output_message('Сеанс завершён.')
 
+    application = make_application(hospital, console)
     application.run_application()
 
     console.verify_all_calls_have_been_made()
