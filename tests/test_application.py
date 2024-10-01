@@ -190,3 +190,35 @@ def test_discharge_patient():
 
     console.verify_all_calls_have_been_made()
     assert hospital._patients == [1, None, 1]
+
+
+def test_scenario_with_other_statuses_model():
+    statuses = {-1: "Критическое состояние",
+                0: "Плохое состояние",
+                1: "Хорошее состояние",
+                2: "Может быть выписан"}
+    hospital = Hospital(patients=[-1, 2, None, 1], statuses=statuses)
+    console = MockConsole()
+    actions_for_commands = ActionsForCommands(InputOutputManager(console), hospital)
+    application = Application(InputOutputManager(console), actions_for_commands)
+
+    console.add_expected_request_and_response('Введите команду: ', 'get status')
+    console.add_expected_request_and_response('Введите ID пациента: ', '1')
+    console.add_expected_output_message('Статус пациента: "Критическое состояние"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'понизить статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '2')
+    console.add_expected_output_message('Новый статус пациента: "Хорошее состояние"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'рассчитать статистику')
+    console.add_expected_output_message('В больнице на данный момент находится 3 чел., из них:' +
+                                        '\n    - в статусе "Критическое состояние": 1 чел.' +
+                                        '\n    - в статусе "Хорошее состояние": 2 чел.')
+
+    console.add_expected_request_and_response('Введите команду: ', 'стоп')
+    console.add_expected_output_message('Сеанс завершён.')
+
+    application.run_application()
+
+    console.verify_all_calls_have_been_made()
+    assert hospital._patients == [-1, 1, None, 1]
