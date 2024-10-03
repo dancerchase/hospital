@@ -56,6 +56,15 @@ class Hospital:
 
         return new_status
 
+    def _get_previous_status_number(self, patient_id: int) -> int:
+        status_number = self._patients[self._convert_patient_id_to_index(patient_id)]
+
+        index_new_status = list(self._statuses.keys()).index(status_number) - 1
+
+        new_status = list(self._statuses.keys())[index_new_status]
+
+        return new_status
+
     def _get_maximum_status_number(self) -> int:
         return max(self._statuses.keys())
 
