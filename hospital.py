@@ -5,12 +5,8 @@ from errors import PatientIDNotExistsError, AttemptLowerMinimumStatusError, Atte
 class Hospital:
     """Основная бизнес-логика работы приложения"""
 
-    def __init__(self, statuses, patients=None):
-        if patients:
-            self._patients = patients
-        else:
-            self._patients = [1 for _ in range(200)]
-
+    def __init__(self, statuses, patients):
+        self._patients = patients
         self._statuses = statuses
 
     def get_patient_status(self, patient_id: int) -> str:
