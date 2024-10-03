@@ -5,10 +5,11 @@ from hospital import Hospital
 from input_output.console import Console
 
 base_statuses = {0: "Тяжело болен", 1: "Болен", 2: "Слегка болен", 3: "Готов к выписке"}
+patients = [1, 1, 0, 2, 1]
 
 input_output_manager = InputOutputManager(Console())
 
-hospital = Hospital(statuses=base_statuses)
+hospital = Hospital(statuses=base_statuses, patients=patients)
 
 actions_for_commands = ActionsForCommands(input_output_manager, hospital)
 
