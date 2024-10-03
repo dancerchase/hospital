@@ -124,6 +124,17 @@ class TestHospital:
 
             assert hospital._patients == [4, 5]
 
+        def test_up_status_for_patient_to_next_status(self):
+            statuses = {10: 'Критическое состояние',
+                        20: 'Среднее состояние',
+                        30: "Хорошее состояние",
+                        40: "Может быть выписан"}
+            hospital = Hospital(patients=[20, 40], statuses=statuses)
+
+            hospital.up_status_for_patient(1)
+
+            assert hospital._patients == [30, 40]
+
     class TestIsPossibleToUpPatientStatus:
 
         def test_is_possible_to_up_patient_status(self):
