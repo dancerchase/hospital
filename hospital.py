@@ -28,7 +28,7 @@ class Hospital:
         if not self.is_possible_to_up_patient_status(patient_id):
             raise AttemptUpperMaximumStatusError
 
-        self._patients[self._convert_patient_id_to_index(patient_id)] = self._get_new_status_number(patient_id)
+        self._patients[self._convert_patient_id_to_index(patient_id)] = self._get_next_status_number(patient_id)
 
     def is_possible_to_up_patient_status(self, patient_id: int) -> bool:
         self._check_patient_exists(patient_id)
@@ -44,16 +44,13 @@ class Hospital:
         if not self._is_possible_to_down_patient_status(patient_id):
             raise AttemptLowerMinimumStatusError
 
-        self._patients[self._convert_patient_id_to_index(patient_id)] = self._get_new_status_number(patient_id,
-                                                                                                    is_up=False)
+        self._patients[self._convert_patient_id_to_index(patient_id)] = self._get_next_status_number(patient_id,
+                                                                                                     is_up=False)
 
-    def _get_new_status_number(self, patient_id: int, is_up: bool = True) -> int:
+    def _get_next_status_number(self, patient_id: int) -> int:
         status_number = self._patients[self._convert_patient_id_to_index(patient_id)]
 
-        if is_up:
-            index_new_status = list(self._statuses.keys()).index(status_number) + 1
-        else:
-            index_new_status = list(self._statuses.keys()).index(status_number) - 1
+        index_new_status = list(self._statuses.keys()).index(status_number) + 1
 
         new_status = list(self._statuses.keys())[index_new_status]
 
