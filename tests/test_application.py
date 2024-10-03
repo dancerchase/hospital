@@ -61,7 +61,7 @@ class TestApplication:
 
     def test_invalid_command(self):
         console = MagicMock()
-        hospital = Hospital(statuses=base_statuses)
+        hospital = Hospital(patients=[], statuses=base_statuses)
         console.input.side_effect = [
             'выписать всех пациентов',
             'стоп']
