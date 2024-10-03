@@ -137,6 +137,11 @@ class TestHospital:
 
             assert hospital._is_possible_to_down_patient_status(2)
 
+        def test_is_not_possible_to_down_patient_status(self):
+            hospital = Hospital(patients=[0, 2], statuses=base_statuses)
+
+            assert not  hospital._is_possible_to_down_patient_status(1)
+
     class TestPatientDischarge:
 
         def test_patient_discharge(self):
