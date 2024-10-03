@@ -105,6 +105,16 @@ class TestHospital:
 
             assert hospital._patients == [4, 5]
 
+        def test_up_status_for_patient_maximum_status_with_other_statuses(self):
+            statuses = {1: 'Критическое состояние', 2: "Тяжело болен", 3: 'Среднее состояние', 4: "Хорошее состояние",
+                        5: "Может быть выписан"}
+            hospital = Hospital(patients=[4, 5], statuses=statuses)
+
+            with pytest.raises(AttemptUpperMaximumStatusError):
+                hospital.up_status_for_patient(2)
+
+            assert hospital._patients == [4, 5]
+
     class TestIsPossibleToUpPatientStatus:
 
         def test_is_possible_to_up_patient_status(self):
