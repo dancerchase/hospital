@@ -297,7 +297,7 @@ class TestHospital:
                         40: "Может быть выписан"}
             hospital = Hospital(patients=[10, 40], statuses=statuses)
 
-            assert hospital._get_new_status_number(1) == 20
+            assert hospital._get_next_status_number(1) == 20
 
         def test_get_new_status_number_for_down_status(self):
             statuses = {10: 'Критическое состояние',
