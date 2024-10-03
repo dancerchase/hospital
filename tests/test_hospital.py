@@ -290,7 +290,7 @@ class TestHospital:
 
     class TestGetNewStatusNumber:
 
-        def test_get_new_status_number(self):
+        def test_get_new_status_number_for_up_status(self):
             statuses = {10: 'Критическое состояние',
                         20: 'Среднее состояние',
                         30: "Хорошее состояние",
@@ -298,3 +298,12 @@ class TestHospital:
             hospital = Hospital(patients=[10, 40], statuses=statuses)
 
             assert hospital._get_new_status_number(1) == 20
+
+        def test_get_new_status_number_for_down_status(self):
+            statuses = {10: 'Критическое состояние',
+                        20: 'Среднее состояние',
+                        30: "Хорошее состояние",
+                        40: "Может быть выписан"}
+            hospital = Hospital(patients=[20, 40], statuses=statuses)
+
+            assert hospital._get_new_status_number(1, is_up=False) == 10
