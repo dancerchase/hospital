@@ -287,3 +287,14 @@ class TestHospital:
 
                 with pytest.raises(PatientStatusNotExistsError):
                     hospital.add_new_patient('несуществующий статус')
+
+    class TestGetNewStatusNumber:
+
+        def test_get_new_status_number(self):
+            statuses = {10: 'Критическое состояние',
+                        20: 'Среднее состояние',
+                        30: "Хорошее состояние",
+                        40: "Может быть выписан"}
+            hospital = Hospital(patients=[10, 40], statuses=statuses)
+
+            assert hospital._get_new_status_number(1) == 20
