@@ -306,4 +306,4 @@ class TestHospital:
                         40: "Может быть выписан"}
             hospital = Hospital(patients=[20, 40], statuses=statuses)
 
-            assert hospital._get_new_status_number(1, is_up=False) == 10
+            assert hospital._get_previous_status_number(1) == 10
