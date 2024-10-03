@@ -259,3 +259,29 @@ def test_add_new_patient_with_invalid_status():
 
     console.verify_all_calls_have_been_made()
     assert hospital._patients == [1, 2, None]
+
+
+def test_change_status_for_patient_to_next_status():
+    statuses = {10: 'Критическое состояние',
+                20: 'Среднее состояние',
+                30: "Хорошее состояние",
+                40: "Может быть выписан"}
+    hospital = Hospital(patients=[20, 40, 30], statuses=statuses)
+    console = MockConsole()
+
+    console.add_expected_request_and_response('Введите команду: ', 'повысить статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '1')
+    console.add_expected_output_message('Новый статус пациента: "Хорошее состояние"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'понизить статус пациента')
+    console.add_expected_request_and_response('Введите ID пациента: ', '3')
+    console.add_expected_output_message('Новый статус пациента: "Среднее состояние"')
+
+    console.add_expected_request_and_response('Введите команду: ', 'стоп')
+    console.add_expected_output_message('Сеанс завершён.')
+
+    application = make_application(hospital, console)
+    application.run_application()
+
+    console.verify_all_calls_have_been_made()
+    assert hospital._patients == [30, 40, 20]
