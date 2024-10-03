@@ -54,10 +54,13 @@ class Hospital:
 
         self._patients[self._convert_patient_id_to_index(patient_id)] = new_status
 
-    def _get_new_status_number(self, patient_id: int) -> int:
+    def _get_new_status_number(self, patient_id: int, is_up: bool = True) -> int:
         status_number = self._patients[self._convert_patient_id_to_index(patient_id)]
 
-        index_new_status = list(self._statuses.keys()).index(status_number) + 1
+        if is_up:
+            index_new_status = list(self._statuses.keys()).index(status_number) + 1
+        else:
+            index_new_status = list(self._statuses.keys()).index(status_number) - 1
 
         new_status = list(self._statuses.keys())[index_new_status]
 
