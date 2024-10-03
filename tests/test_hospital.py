@@ -76,6 +76,17 @@ class TestHospital:
 
             assert hospital._patients == [-1, 0]
 
+        def test_down_status_for_patient_to_next_status(self):
+            statuses = {10: 'Критическое состояние',
+                        20: 'Среднее состояние',
+                        30: "Хорошее состояние",
+                        40: "Может быть выписан"}
+            hospital = Hospital(patients=[20, 40], statuses=statuses)
+
+            hospital.down_status_for_patient(1)
+
+            assert hospital._patients == [10, 40]
+
     class TestUpStatusForPatient:
 
         def test_up_status_for_patient(self):
