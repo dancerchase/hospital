@@ -67,6 +67,15 @@ class TestHospital:
 
             assert hospital._patients == [-1, -1, 1]
 
+        def test_down_status_for_patient_minimum_status_with_other_statuses(self):
+            statuses = {-1: 'Критическое состояние', 0: "Тяжело болен", 1: 'Среднее состояние'}
+            hospital = Hospital(patients=[-1, 0], statuses=statuses)
+
+            with pytest.raises(AttemptLowerMinimumStatusError):
+                hospital.down_status_for_patient(1)
+
+            assert hospital._patients == [-1, 0]
+
     class TestUpStatusForPatient:
 
         def test_up_status_for_patient(self):
