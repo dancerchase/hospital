@@ -44,8 +44,7 @@ class Hospital:
         if not self._is_possible_to_down_patient_status(patient_id):
             raise AttemptLowerMinimumStatusError
 
-        self._patients[self._convert_patient_id_to_index(patient_id)] = self._get_next_status_number(patient_id,
-                                                                                                     is_up=False)
+        self._patients[self._convert_patient_id_to_index(patient_id)] = self._get_previous_status_number(patient_id)
 
     def _get_next_status_number(self, patient_id: int) -> int:
         status_number = self._patients[self._convert_patient_id_to_index(patient_id)]
